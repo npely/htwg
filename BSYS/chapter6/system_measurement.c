@@ -16,32 +16,32 @@
 int main(void)
 {
     struct timespec start, stop;
-    double result;
+    double result = 0;
     //clockid_t clk_id;
     //clk_id = CLOCK_REALTIME;
-    char c;
-    int fd = open("./test.txt", O_RDONLY);
-
-    if (clock_gettime(CLOCK_REALTIME, &start) == -1)
-    {
-        fprintf(stderr, "start of measurement failed\n");
-        exit(1);
-    }
-
+    //char c;
+    //int fd = open("./test.txt", O_RDONLY);
     for (int i = 0; i < 100; i++)
     {
-        read(fd, &c, 1);
+        if (clock_gettime(CLOCK_REALTIME, &start) == -1)
+        {
+            fprintf(stderr, "start of measurement failed\n");
+            exit(1);
+        }
+
+        read(1, NULL, 0);
+
+        if (clock_gettime(CLOCK_REALTIME, &stop) == -1)
+        {
+            fprintf(stderr, "stopping the measurement failed\n");
+            exit(1);
+        }
+
+        result += (stop.tv_sec - start.tv_sec) + (stop.tv_nsec - stop.tv_nsec);
     }
 
-    if (clock_gettime(CLOCK_REALTIME, &stop) == -1)
-    {
-        fprintf(stderr, "stopping the measurement failed\n");
-        exit(1);
-    }
-
-    result = (stop.tv_sec - start.tv_sec) + (stop.tv_nsec - stop.tv_nsec) / BILLION;
     result = result / 100;
-    printf("%lf\n", result);
+    printf("%.50lf\n", result);
 
     return 0;
     
