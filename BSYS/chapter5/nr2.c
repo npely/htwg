@@ -20,14 +20,17 @@ int main(void)
         fprintf(stderr ,"failed");
         return 1;
     }
+
     else if (rc == 0)
     {
         write(fd, "Child writing to file nr2.txt\n", 30);
     }
+    
     else
     {
         write(fd, "Parent writing to file nr2.txt\n", 31);
     }
     
+    close(fd);
     return 0;
 }

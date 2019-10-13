@@ -19,11 +19,13 @@ int main(void)
         fprintf(stderr, "fork failed");
         exit(1);
     }
+
     else if (rc == 0)
     {
         x = 50;
         printf("I am the child, the value is %d\n", x);
     }
+    
     else
     {
         x = 10;

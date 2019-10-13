@@ -19,14 +19,17 @@ int main(void)
         fprintf(stderr, "fork failed\n");
         exit(1);
     }
+
     else if (rc == 0)
     {
         printf("hello, I am the child (pid:%d)\n", getpid());
     }
+
     else 
     {
         int rc_wait = wait(NULL);
         printf("goodbye, I am the parent (pid:%d) (rc_wait:%d)\n", getpid(), rc_wait);
     }
+    
     return 0;
 }
