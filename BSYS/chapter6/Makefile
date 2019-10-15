@@ -2,7 +2,7 @@ CC= gcc -o
 CFLAGS = -g -W -Wall -std=$(STD) -pedantic
 STD= c11
 
-TARGET = system_measurement
+TARGET = system_measurement1 system_measurement100
 
 .PHONY: all clean
 
