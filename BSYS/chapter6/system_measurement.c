@@ -17,7 +17,7 @@ int main(void)
 {
     struct timespec start, stop;
     double result = 0;
-    size_t cycles = 1;
+    size_t cycles = 100;
     //clockid_t clk_id;
     //clk_id = CLOCK_REALTIME;
     //char c;
