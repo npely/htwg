@@ -42,7 +42,13 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
             ensureCapacity(2 * size);
         }
 
-        dic[size] = new Entry<K, V>(key, value);
+        int j = size - 1;
+        while (j >= 0 && key.compareTo(dic[j].getKey()) < 0) {
+            dic[j + 1] = dic[j];
+            j--;
+        }
+
+        dic[j + 1] = new Entry<K, V>(key, value);
         size++;
         return null;
     }
@@ -72,11 +78,24 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
 
     @Override
     public int size() {
-        return 0;
+        return this.size;
     }
 
     @Override
-    public Iterator<Entry> iterator() {
-        return null;
+    public Iterator<Entry<K, V>> iterator() {
+        return new Iterator<Entry<K, V>>() {
+
+            int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return dic[index + 1] != null;
+            }
+
+            @Override
+            public Entry next() {
+                return dic[index++];
+            }
+        };
     }
 }
