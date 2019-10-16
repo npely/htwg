@@ -16,6 +16,10 @@
 int main(void)
 {
     struct timespec start, stop;
+    long sysresultstart = 0;
+    long sysresultstop = 0;
+    long loopresultstart = 0;
+    long loopresultstop = 0;
     long sysresult = 0;
     long loopresult = 0;
     size_t cycles = 100;
@@ -43,7 +47,10 @@ int main(void)
         exit(1);
     }
 
-    sysresult = ((stop.tv_sec - start.tv_sec) * BILLION) + (stop.tv_nsec - start.tv_nsec);
+    sysresultstart = (start.tv_sec * BILLION) + start.tv_nsec;
+    sysresultstop = (stop.tv_sec * BILLION) + stop.tv_nsec;
+
+    sysresult = sysresultstop - sysresultstart; 
 
     sysresult = sysresult / cycles;
 
@@ -64,7 +71,10 @@ int main(void)
         exit(1);
     }
 
-    loopresult = ((stop.tv_sec - start.tv_sec) * BILLION) + (stop.tv_nsec - start.tv_nsec);
+    loopresultstart = (start.tv_sec * BILLION) + start.tv_nsec;
+    loopresultstop = (stop.tv_sec * BILLION) + stop.tv_nsec;
+
+    loopresult = loopresultstop - loopresultstart;
 
     loopresult = loopresult / cycles;
 
