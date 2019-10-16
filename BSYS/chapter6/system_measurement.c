@@ -22,6 +22,7 @@ int main(void)
     //clk_id = CLOCK_REALTIME;
     //char c;
     //int fd = open("./test.txt", O_RDONLY);
+    //clock_getres
     
     for (size_t i = 0; i < cycles; i++)
     {
