@@ -32,7 +32,7 @@ int main(void)
             exit(1);
         }
 
-        read(0, NULL, 0);
+        getpid();
 
         if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop) == -1)
         {
