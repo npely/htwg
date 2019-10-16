@@ -43,7 +43,7 @@ int main(void)
         exit(1);
     }
 
-    sysresult = ((stop.tv_sec - start.tv_sec) * BILLION) + (double)((stop.tv_nsec - start.tv_nsec));
+    sysresult = ((stop.tv_sec - start.tv_sec) * BILLION) + (stop.tv_nsec - start.tv_nsec);
 
     sysresult = sysresult / cycles;
 
