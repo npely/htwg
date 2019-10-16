@@ -16,35 +16,61 @@
 int main(void)
 {
     struct timespec start, stop;
-    double result = 0;
+    long sysresult = 0;
+    long loopresult = 0;
     size_t cycles = 100;
+    long result = 0;
     //clockid_t clk_id;
     //clk_id = CLOCK_REALTIME;
     //char c;
     //int fd = open("./test.txt", O_RDONLY);
     //clock_getres
     
-    for (size_t i = 0; i < cycles; i++)
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start) == -1)
     {
-        if (clock_gettime(CLOCK_MONOTONIC_RAW, &start) == -1)
-        {
-            fprintf(stderr, "start of measurement failed\n");
-            exit(1);
-        }
-
-        getpid();
-
-        if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop) == -1)
-        {
-            fprintf(stderr, "stopping the measurement failed\n");
-            exit(1);
-        }
-
-        result += (double)(stop.tv_sec - start.tv_sec) + ((double)(stop.tv_nsec - start.tv_nsec) / BILLION);
+        fprintf(stderr, "start of measurement failed\n");
+        exit(1);
     }
 
-    result = result / (double)cycles;
-    printf("%.9f\n", result);
+    for (size_t i = 0; i < cycles; i++)
+    {
+        getpid();
+    }
+
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop) == -1)
+    {
+        fprintf(stderr, "stopping the measurement failed\n");
+        exit(1);
+    }
+
+    sysresult = ((stop.tv_sec - start.tv_sec) * BILLION) + (double)((stop.tv_nsec - start.tv_nsec));
+
+    sysresult = sysresult / cycles;
+
+
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start) == -1)
+    {
+        fprintf(stderr, "start of measurement failed\n");
+        exit(1);
+    }
+
+    for (size_t i = 0; i < cycles; i++)
+    {
+    }
+
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop) == -1)
+    {
+        fprintf(stderr, "stopping the measurement failed\n");
+        exit(1);
+    }
+
+    loopresult = ((stop.tv_sec - start.tv_sec) * BILLION) + (stop.tv_nsec - start.tv_nsec);
+
+    loopresult = loopresult / cycles;
+
+    result = sysresult - loopresult;
+
+    printf("%ld\n", result);
 
     return 0;
     
