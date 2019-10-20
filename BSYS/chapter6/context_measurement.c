@@ -1,4 +1,5 @@
 #define _POSIX_C_SOURCE 199309L
+#define _GNU_SOURCE
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,14 +10,13 @@
 
 #define BILLION 1000000000L
 
-int main(int argc, char *argv[])
+int main(void)
 {
     struct timespec start, stop;
 
     int pipefd[2];
     pid_t cpid;
-    char buf;
-    int rbytes;
+    char readbuf;
 
     long result;
     long resultstart;
@@ -24,13 +24,10 @@ int main(int argc, char *argv[])
 
     cpu_set_t process;
     int length = sizeof(process);
+    CPU_ZERO(&process);
+	CPU_SET(2, &process);
 
-
-    if (pipe(pipefd) == -1)
-    {
-        perror("pipe");
-        exit(EXIT_FAILURE);
-    }
+    pipe(pipefd);
 
     cpid = fork();
 
@@ -40,43 +37,42 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start) == -1)
-    {
-        fprintf(stderr, "start of measurement failed\n");
-        exit(1);
-    }
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
-    if ((sched_setaffinity(0, length, &process)) < 1)
+    if ((sched_setaffinity(getpid(), length, &process)) < 1)
     {
         if (cpid == 0)
         {
+            //closing write
             close(pipefd[1]);
-            rbytes = read(pipefd[0], buf, sizeof(buf));
-            printf("Read: %s\n", buf);
+
+            read(pipefd[0], readbuf, sizeof(readbuf));
+            printf("Read: %s\n", readbuf);
+
+            //closing read
+            close(pipefd[0]);
             exit(0);
         }
         else
         {
+            //closing read
             close(pipefd[0]);
-            write(pipefd[1], "Test!\n", 8);
-
-            if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop) == -1)
-            {
-                fprintf(stderr, "stopping the measurement failed\n");
-                exit(1);
-            }
-
-            resultstart = (start.tv_sec * BILLION) + start.tv_nsec;
-            resultstop = (stop.tv_sec * BILLION) + stop.tv_nsec;
-
-            result = resultstop - resultstart;
-            printf("time taken by a context switch: %ldns\n", result);
-
+            write(pipefd[1], "bitte komm an\n", 1);
+            //stopping time
+            clock_gettime(CLOCK_MONOTONIC_RAW, &stop);
+            //closing write
             close(pipefd[1]);
             wait(NULL);
         }
-        
+
+        resultstart = (start.tv_sec * BILLION) + start.tv_nsec;
+        resultstop = (stop.tv_sec * BILLION) + stop.tv_nsec;
+
+        result = resultstop - resultstart;
+        printf("time taken by context switch: %ldns\n", result);
+
     }
+    
 
     return 0;
 }
