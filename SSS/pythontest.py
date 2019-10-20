@@ -3,9 +3,9 @@
 w, h = 5, 5
 Matrix = [[0 for x in range(w)] for y in range(h)]
 
-Matrix[3][2] = 1
+Matrix[2][1] = 1
 
-print(Matrix[3][2])
+print(Matrix[2][1])
 
 
 
