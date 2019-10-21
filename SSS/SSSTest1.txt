@@ -38,7 +38,7 @@ der quadrierten Abstände zwischen allen n Datenpunkten und der Gerade minimiert
 6. Kann man die lineare Regression auch bei Kennlinien anwenden, die einem Gesetz der Form
 y = x ^ a folgen?
 
-Nein, da wir eine lineare Übertragungsfunktion benötigen
+Ja, über Umwege
 
 
 7. Sie haben in Python eine 5 x 5 - Matrix a angelegt. Wie greifen Sie auf das zweite 
@@ -79,7 +79,7 @@ Wahrscheinlichkeit von 95,5 % fällt?
 Aufgrund der geringen Anzahl der Messungen kann der Fehler unterschätzt werden.
 Das bedeutet man muss die Fehlerschätzung um einen Faktor t nach oben verschieben.
 
-Formel: x = x (arithmetischer Mittelwert) +- t * s
+Formel: x = x (arithmetischer Mittelwert) +- t * 2s
 
 Da 20 Messungen gilt t = 2,09
 
