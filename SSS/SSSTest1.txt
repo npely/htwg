@@ -31,7 +31,7 @@ Die partiellen Ableitungen dienen hier als Gewichtsfaktoren für die Stärke der
 
 5. Was leistet die lineare Regression?
 
-Das Ziel der linearen Regression ist das Auffinden einer Ausgleichgeraden, die die Summer
+Das Ziel der linearen Regression ist das Auffinden einer Ausgleichgeraden, die die Summe
 der quadrierten Abstände zwischen allen n Datenpunkten und der Gerade minimiert.
 
 
@@ -44,7 +44,7 @@ Nein, da wir eine lineare Übertragungsfunktion benötigen
 7. Sie haben in Python eine 5 x 5 - Matrix a angelegt. Wie greifen Sie auf das zweite 
 Element der dritten Zeile zu?
 
-a[2][1]
+a[2,1]
 
 
 8. Ein Messintrument hat einen Anzeigefehler von 1% und einen Skalenendwert von 5 A. Im 
