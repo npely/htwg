@@ -46,20 +46,24 @@ int main(void)
             //closing write
             close(pipefd[1]);
 
-            read(pipefd[0], readbuf, sizeof(readbuf));
-            printf("Read: %s\n", readbuf);
+            write(STDOUT_FILENO, "Read: ", 8);
+            while(read(pipefd[0], &readbuf, 1) > 0)
+                write(STDOUT_FILENO, &readbuf, 1);
+            write(STDOUT_FILENO, "\n", 1);
 
             //closing read
             close(pipefd[0]);
-            exit(0);
+            exit(EXIT_SUCCESS);
         }
         else
         {
             //closing read
             close(pipefd[0]);
-            write(pipefd[1], "bitte komm an\n", 1);
+            write(pipefd[1], "bitte komm an\n", 16);
+
             //stopping time
             clock_gettime(CLOCK_MONOTONIC_RAW, &stop);
+            
             //closing write
             close(pipefd[1]);
             wait(NULL);
