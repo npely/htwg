@@ -71,7 +71,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
             }
         }
 
-        if (size + 1 == tab.length)
+        if (size == tab.length)
             ensureCapacity();
 
         if (tab[adr] == null) {

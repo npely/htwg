@@ -9,33 +9,36 @@ public class TUI {
         Dictionary dic = null;
         String in;
 
+        System.out.println("Welcome to Dictionary TUI");
+
         while (EINGABE.hasNext()) {
             in = EINGABE.next();
 
-            if (in == "create") {
-                if (EINGABE.next().equals("HashDictionary"))
-                    dic = create(1);
-                else
-                    dic = create(0);
-            }
-            else if (in == "read") {
+            switch (in) {
+                case ("create"):
+                    if (EINGABE.next().equals("HashDictionary"))
+                        dic = create(1);
+                    else
+                        dic = create(0);
+                    break;
+                case("read"):
 
-            }
-            else if (in == "p") {
-                print(dic);
-            }
-            else if (in == "s") {
-                search(EINGABE.next(), dic);
-            }
-            else if (in == "i") {
-                insert(EINGABE.next(), EINGABE.next(), dic);
-            }
-            else if (in == "r") {
-                remove(EINGABE.next(), dic);
-            }
-            else if (in == "exit") {
-                System.exit(0);
-            }
+                case("p"):
+                    print(dic);
+                    break;
+                case("s"):
+                    search(EINGABE.next(), dic);
+                    break;
+                case("i"):
+                    insert(EINGABE.next(), EINGABE.next(), dic);
+                    break;
+                case("r"):
+                    remove(EINGABE.next(), dic);
+                    break;
+                case("exit"):
+                    System.exit(0);
+                    break;
+                }
         }
     }
 
