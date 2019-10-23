@@ -56,9 +56,13 @@ public class TUI {
         }
     }
 
+    private static void read() {
+
+    }
+
     private static void search(String key, Dictionary<String, String> dic) {
-        System.out.printf("Found: " + key + "\n");
-        dic.search(key);
+            dic.search(key);
+            System.out.printf("Found: " + key + "\n");
     }
 
     private static void insert(String key, String value, Dictionary<String, String> dic) {

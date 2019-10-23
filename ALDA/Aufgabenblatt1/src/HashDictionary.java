@@ -25,35 +25,38 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
     }
 
     private int hash(K key) {
-        int adr = key.hashCode();
+        int adr = 0;
+        adr = key.hashCode();
         if (adr < 0)
             adr = -adr;
-        return adr % (tab.length - 1);
+        return (adr % (tab.length - 1));
     }
 
     private void ensureCapacity() {
-        int newload = 2 * tab.length;
 
-        while (!isPrime(newload))
-            ++newload;
+            int newload = 2 * tab.length;
 
-        HashDictionary<K, V> newtab = new HashDictionary<>(newload);
+            while (!isPrime(newload))
+                ++newload;
 
-        for (LinkedList<Entry<K, V>> v : tab) {
-            if (v == null)
-                continue;
-            for (Entry<K, V> e : v)
-                newtab.insert(e.getKey(), e.getValue());
-        }
+            HashDictionary<K, V> newtab = new HashDictionary<>(newload);
 
-        tab = new LinkedList[newload];
+            for (LinkedList<Entry<K, V>> v : tab) {
+                if (v == null)
+                    continue;
+                for (Entry<K, V> e : v)
+                    newtab.insert(e.getKey(), e.getValue());
+            }
 
-        for (LinkedList<Entry<K, V>> v : newtab.tab) {
-            if (v == null)
-                continue;
-            for (Entry<K, V> e : v)
-                this.insert(e.getKey(), e.getValue());
-        }
+            tab = new LinkedList[newload];
+            load = newload;
+
+            for (LinkedList<Entry<K, V>> v : newtab.tab) {
+                if (v == null)
+                    continue;
+                for (Entry<K, V> e : v)
+                    this.insert(e.getKey(), e.getValue());
+            }
     }
 
 
@@ -71,7 +74,9 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
             }
         }
 
-        if (size == tab.length)
+        /*if ((size / tab.length) > 2)
+            ensureCapacity();*/
+        if (size++ == tab.length)
             ensureCapacity();
 
         if (tab[adr] == null) {
@@ -90,9 +95,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
     @Override
     public V search(K key) {
         int adr = hash(key);
-            if (tab[adr] == null)
-                return null;
-            else
+            if (tab[adr] != null)
                 for (Entry<K, V> v : tab[adr]) {
                     if (v.getKey().equals(key))
                         return v.getValue();
@@ -109,6 +112,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
             if (v.getKey().equals(key)) {
                 V old = v.getValue();
                 tab[adr].remove(v);
+                size--;
                 return old;
             }
         }
@@ -120,26 +124,32 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
         return this.size;
     }
 
+    private class HashIterator implements Iterator<Entry<K, V>> {
+
+        int index = -1;
+        Iterator<Entry<K, V>> it;
+
+        @Override
+        public boolean hasNext() {
+            if (it != null && it.hasNext())
+                return true;
+            while (++index < tab.length) {
+                if (tab[index] != null) {
+                    it = tab[index].iterator();
+                    return  it.hasNext();
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public Entry<K, V> next() {
+            return it.next();
+        }
+    }
     @Override
     public Iterator<Entry<K, V>> iterator() {
-        return new Iterator<Entry<K, V>>() {
-
-            int tabindex = -1;
-
-            @Override
-            public boolean hasNext() {
-                while (++tabindex < tab.length) {
-                    if (tab[tabindex] != null)
-                        return tab[tabindex].listIterator().hasNext();
-                }
-                return false;
-            }
-
-            @Override
-            public Entry<K, V> next() {
-                return tab[tabindex].listIterator().next();
-            }
-        };
+        return new HashIterator();
     }
 }
 
