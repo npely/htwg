@@ -14,20 +14,21 @@ int main(void)
 {
     struct timespec start, stop;
 
-    int pipefd[2];
+    int pipefd1[2];
+    int pipefd2[2];
     pid_t cpid;
-    char readbuf;
 
-    long result;
-    long resultstart;
-    long resultstop;
+    long currentTimeStart;
+    long currentTimeStop;
+    long currentTime;
 
     cpu_set_t process;
     int length = sizeof(process);
     CPU_ZERO(&process);
 	CPU_SET(2, &process);
 
-    pipe(pipefd);
+    pipe(pipefd1);
+    pipe(pipefd2);
 
     cpid = fork();
 
@@ -37,46 +38,48 @@ int main(void)
         exit(1);
     }
 
-    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
     if ((sched_setaffinity(getpid(), length, &process)) < 1)
     {
         if (cpid == 0)
         {
-            //closing write
-            close(pipefd[1]);
+            //closing write from fd2
+            close(pipefd2[1]);
+            //closing read from fd1
+            close(pipefd1[0]);
 
-            write(STDOUT_FILENO, "Read: ", 8);
-            while(read(pipefd[0], &readbuf, 1) > 0)
-                write(STDOUT_FILENO, &readbuf, 1);
-            write(STDOUT_FILENO, "\n", 1);
-
+            clock_gettime(CLOCK_MONOTONIC_RAW, &stop);//stop1
+                write(pipefd1[1], currentTime, sizeof(long) * 2);
+            clock_gettime(CLOCK_MONOTONIC_RAW, &start);//start2
+            
+            read(pipefd2[0], currentTime, sizeof(long) * 2);
             //closing read
-            close(pipefd[0]);
+            close(pipefd1[0]);
+
+            printf("time taken by context switch: %ldns\n", currentTime);
+
             exit(EXIT_SUCCESS);
+
         }
         else
         {
             //closing read
-            close(pipefd[0]);
-            write(pipefd[1], "bitte komm an\n", 16);
+            close(pipefd2[0]);//close pipe2 read
+            close(pipefd1[1]);//close pipe1 write
 
-            //stopping time
-            clock_gettime(CLOCK_MONOTONIC_RAW, &stop);
+            clock_gettime(CLOCK_MONOTONIC_RAW, &start); //start1
+                read(pipefd1[0], currentTime, sizeof(long) * 2);
+            clock_gettime(CLOCK_MONOTONIC_RAW, &stop); //stop2
             
-            //closing write
-            close(pipefd[1]);
-            wait(NULL);
+            currentTimeStart = (start.tv_sec * BILLION) + start.tv_nsec;
+            currentTimeStop = (stop.tv_sec * BILLION) + stop.tv_nsec;
+
+            currentTime = currentTimeStop - currentTimeStart;
+            currentTime / 2;
+
+            write(pipefd2[1], currentTime, sizeof(long) * 2);
+            
         }
-
-        resultstart = (start.tv_sec * BILLION) + start.tv_nsec;
-        resultstop = (stop.tv_sec * BILLION) + stop.tv_nsec;
-
-        result = resultstop - resultstart;
-        printf("time taken by context switch: %ldns\n", result);
-
     }
-    
-
     return 0;
 }
