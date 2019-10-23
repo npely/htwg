@@ -59,7 +59,6 @@ int main(void)
 
                 //write(pipefd1[1], NULL, 1);
             //clock_gettime(CLOCK_MONOTONIC_RAW, &start); //start2
-            printf("Hello");
             sched_yield();
             //read(pipefd2[0], currentTime, sizeof(long) * 2);
 
@@ -75,7 +74,7 @@ int main(void)
             //close(pipefd1[1]);//close pipe1 write
 
             clock_gettime(CLOCK_MONOTONIC_RAW, &start); //start1
-                sched_yield();
+                sched_yield;
                 //read(pipefd1[0], NULL, sizeof(long) * 2);
             clock_gettime(CLOCK_MONOTONIC_RAW, &stop); //stop2
 
@@ -85,7 +84,7 @@ int main(void)
         }
 
         //currentTime1 = currentTimeStop1 - currentTimeStart1;
-        currentTime2 = currentTimeStop2 - currentTimeStart2;
+        currentTime2 = (currentTimeStop2 - currentTimeStart2) / 2;
 
         //printf("test1 %ldns\n", currentTime1);
         printf("test2 %ldns\n", currentTime2);
