@@ -84,7 +84,7 @@ int main(void)
         }
 
         //currentTime1 = currentTimeStop1 - currentTimeStart1;
-        currentTime2 = (currentTimeStop2 - currentTimeStart2) / 2;
+        currentTime2 = (currentTimeStop2 - currentTimeStart2) / 2 ;
 
         //printf("test1 %ldns\n", currentTime1);
         printf("test2 %ldns\n", currentTime2);
