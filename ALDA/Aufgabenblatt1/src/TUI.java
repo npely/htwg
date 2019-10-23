@@ -22,40 +22,40 @@ public class TUI {
 
         String args[] = command.split(" ");
 
-            switch (args[0]) {
-                case "create":
-                        create(args);
-                    break;
-                case "read":
-                    read();
-                case "p":
-                    if (dic == null)
-                        System.out.println("Use 'create' to create your first Dictionary!");
-                    else
-                        print();
-                    break;
-                case "s":
-                    if (dic == null)
-                        System.out.println("Use 'create' to create your first Dictionary!");
-                    else
-                        search(args);
-                    break;
-                case "i":
-                    if (dic == null)
-                        System.out.println("Use 'create' to create your first Dictionary!");
-                    else
-                        insert(args);
-                    break;
-                case "r":
-                    if (dic == null)
-                        System.out.println("Use 'create' to create your first Dictionary!");
-                    else
-                        remove(args);
-                    break;
-                case "exit":
-                    System.exit(0);
-                    break;
-            }
+        switch (args[0]) {
+            case "create":
+                    create(args);
+                break;
+            case "read":
+                read();
+            case "p":
+                if (dic == null)
+                    System.out.println("Use 'create' to create your first Dictionary!");
+                else
+                    print();
+                break;
+            case "s":
+                if (dic == null)
+                    System.out.println("Use 'create' to create your first Dictionary!");
+                else
+                    search(args);
+                break;
+            case "i":
+                if (dic == null)
+                    System.out.println("Use 'create' to create your first Dictionary!");
+                else
+                    insert(args);
+                break;
+            case "r":
+                if (dic == null)
+                    System.out.println("Use 'create' to create your first Dictionary!");
+                else
+                    remove(args);
+                break;
+            case "exit":
+                System.exit(0);
+                break;
+        }
     }
 
     private static void create(String[] args) {
@@ -75,7 +75,7 @@ public class TUI {
 
         int counter = 0;
         int n = 100000;
-        
+
         File selectedFile = null;
         String line;
 
