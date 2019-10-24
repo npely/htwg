@@ -85,11 +85,11 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
     public Iterator<Entry<K, V>> iterator() {
         return new Iterator<Entry<K, V>>() {
 
-            int index = 0;
+            int index = -1;
 
             @Override
             public boolean hasNext() {
-                return dic[index + 1] != null;
+                return dic[++index] != null;
             }
 
             @Override

@@ -27,7 +27,7 @@ public class TUI {
                     create(args);
                 break;
             case "read":
-                read();
+                read(Integer.parseInt(args[1]));
             case "p":
                 if (dic == null)
                     System.out.println("Use 'create' to create your first Dictionary!");
@@ -52,6 +52,12 @@ public class TUI {
                 else
                     remove(args);
                 break;
+            case "t":
+                if (dic == null)
+                    System.out.println("Use 'create' to create your first Dictionary!");
+                else
+                    test(Integer.parseInt(args[1]));
+                break;
             case "exit":
                 System.exit(0);
                 break;
@@ -71,13 +77,13 @@ public class TUI {
             System.out.println(v.getKey() + ": " + v.getValue());
     }
 
-    private static void read() throws IOException {
+    private static void read(int n) throws IOException {
 
         int counter = 0;
-        int n = 100000;
 
         File selectedFile = null;
         String line;
+        //List<String> =
 
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File("/home/niklas13/Programme/htwg/ALDA"));
@@ -94,21 +100,21 @@ public class TUI {
         try {
             in = new FileReader(selectedFile);
             BufferedReader br = new BufferedReader(in);
-            start = System.currentTimeMillis();
+            start = System.nanoTime();
             while ((line = br.readLine()) != null && counter < n)
             {
                 String[] words = line.split(" ");
                 dic.insert(words[0], words[1]);
                 counter++;
             }
-            stop = System.currentTimeMillis();
+            stop = System.nanoTime();
             br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         long diff = stop - start;
-        System.out.println("Read took " + diff + "ms");
+        System.out.println("Read took " + (diff / 1000000) + "ms");
 
     }
 
@@ -129,5 +135,69 @@ public class TUI {
     private static void remove(String[] args) {
         System.out.printf("Removing %s from Dictionary\n", args[1]);
         dic.remove(args[1]);
+    }
+
+    private static void test(int n) {
+        int counter = 0;
+
+        File selectedFile = null;
+        String line;
+        List<String> germanWords = new LinkedList<>();
+        List<String> englishWords = new LinkedList<>();
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("/home/niklas13/Programme/htwg/ALDA"));
+        int rv = chooser.showOpenDialog(null);
+        if (rv == JFileChooser.APPROVE_OPTION) {
+            selectedFile = chooser.getSelectedFile();
+            System.out.println(selectedFile.getAbsolutePath());
+        } else
+            return;
+
+        FileReader in;
+        long startG = 0;
+        long stopG = 0;
+        long startE = 0;
+        long stopE = 0;
+        long timeG = 0;
+        long timeE = 0;
+        try {
+            in = new FileReader(selectedFile);
+            BufferedReader br = new BufferedReader(in);
+            while ((line = br.readLine()) != null && counter < n)
+            {
+                String[] words = line.split(" ");
+                germanWords.add(words[0]);
+                englishWords.add(words[1]);
+                dic.insert(words[0], words[1]);
+                counter++;
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ListIterator<String> itG = germanWords.listIterator();
+
+        while (itG.hasNext() == true) {
+            startG = System.nanoTime();
+            dic.search(itG.next());
+            stopG = System.nanoTime();
+            timeG += (stopG - startG);
+        }
+
+        System.out.printf("Search time for german words: " + (timeG / 1000000) + "ms\n");
+
+        ListIterator<String> itE = englishWords.listIterator();
+
+        while (itE.hasNext() == true) {
+            startE = System.nanoTime();
+            dic.search(itE.next());
+            stopE = System.nanoTime();
+            timeE += (stopE - startE);
+        }
+
+        System.out.printf("Search time for english words: " + (timeE / 1000000) + "ms\n");
+
     }
 }
