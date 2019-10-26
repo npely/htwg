@@ -1,0 +1,37 @@
+% bash command line Syntax Highlighting
+\lstdefinestyle{BASH_CMD}{ 
+  columns=fullflexible,            % copy pasteable listings
+  language=bash,
+  basicstyle=\small\sffamily,
+  basicstyle   = \small \ttfamily,
+  keywordstyle = [1]\small \ttfamily,
+  keywordstyle = [2]\small \ttfamily,
+  commentstyle = \small \ttfamily,
+  numbers=none,
+  captionpos=b, 
+  breaklines=true,
+  numberstyle=\tiny,
+  numbersep=3pt,
+  frame=tlrb,
+  columns=fullflexible,
+  backgroundcolor=\color{white!20},
+  linewidth=\linewidth,
+  literate=                        % replace in code
+     {Ö}{{\"O}}1 
+     {Ä}{{\"A}}1 
+     {Ü}{{\"U}}1 
+     {ß}{{\ss}}2 
+     {ü}{{\"u}}1 
+     {ä}{{\"a}}1 
+     {ö}{{\"o}}1 
+     {â}{{\^{a}}}1 
+     {Â}{{\^{A}}}1 
+     {ç}{{\c{c}}}1 
+     {Ç}{{\c{C}}}1 
+     {ğ}{{\u{g}}}1 
+     {Ğ}{{\u{G}}}1 
+     {ı}{{\i}}1 
+     {İ}{{\.{I}}}1 
+     {ş}{{\c{s}}}1 
+     {Ş}{{\c{S}}}1 
+}

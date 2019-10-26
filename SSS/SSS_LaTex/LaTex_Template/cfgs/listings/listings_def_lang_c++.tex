@@ -1,0 +1,61 @@
+% Matlab Syntax Highlighting
+\colorlet{keyword}{blue!100!black!80}
+\colorlet{STD}{Lavender}
+\colorlet{comment}{green!90!black!90}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+
+\lstdefinestyle{CPP}{ 
+  language     = C++,
+  basicstyle   = \footnotesize \ttfamily,
+  keywordstyle = [1]\color{keyword}\bfseries,
+  keywordstyle = [2]\color{STD}\bfseries,
+  commentstyle = \color{mygreen}\itshape,
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} 
+                                   % or \usepackage{xcolor}
+  columns=fullflexible,            % copy pasteable listings
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=false,                % sets automatic line breaking
+  captionpos=c,                    % sets the caption-position to bottom
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only,
+                                   % does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code
+                                   % (possibly needs columns=flexible)
+  numbers=left,                    % where to put the line-numbers; possible values are 
+                                   % (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks
+                                   % within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it
+  	                               % overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line 
+                                   % will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname,                  % set title name
+  literate=                        % replace in code
+     {Ö}{{\"O}}1 
+     {Ä}{{\"A}}1 
+     {Ü}{{\"U}}1 
+     {ß}{{\ss}}2 
+     {ü}{{\"u}}1 
+     {ä}{{\"a}}1 
+     {ö}{{\"o}}1 
+     {â}{{\^{a}}}1 
+     {Â}{{\^{A}}}1 
+     {ç}{{\c{c}}}1 
+     {Ç}{{\c{C}}}1 
+     {ğ}{{\u{g}}}1 
+     {Ğ}{{\u{G}}}1 
+     {ı}{{\i}}1 
+     {İ}{{\.{I}}}1 
+     {ş}{{\c{s}}}1 
+     {Ş}{{\c{S}}}1 
+}
