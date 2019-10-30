@@ -4,17 +4,19 @@ import java.util.Iterator;
 
 public class BinaryDictionary <K extends Comparable<? super K>, V> implements Dictionary<K, V> {
 
-    private Node<K, V> root;
+    private Node<K, V> root = null;
 
     static private class Node<K extends Comparable<? super K>, V> {
-        Node left;
-        Node right;
+        Node<K, V> left;
+        Node<K, V> right;
         Entry<K, V> data;
+        int height;
 
-        public Node() {
+        public Node(Entry<K, V> data) {
             this.data = data;
             this.left = left;
             this.right = right;
+            this.height = height;
         }
     }
 
@@ -25,7 +27,18 @@ public class BinaryDictionary <K extends Comparable<? super K>, V> implements Di
 
     @Override
     public V search(K key) {
-        return null;
+        return searchR(key, root);
+    }
+
+    private V searchR(K key, Node<K, V> p) {
+        if (p == null)
+            return null;
+        else if (key.compareTo(p.data.getKey()) < 0)
+            return searchR(key, p.left);
+        else if (key.compareTo(p.data.getKey()) > 0)
+            return searchR(key, p.right);
+        else
+            return p.data.getValue();
     }
 
     @Override
