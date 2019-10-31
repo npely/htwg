@@ -18,7 +18,7 @@ public class DictionaryTest {
 		
 		testSortedArrayDictionary();
 		testHashDictionary();
-		//testBinaryTreeDictionary();
+		testBinaryTreeDictionary();
 	}
 
 	private static void testSortedArrayDictionary() {
@@ -31,7 +31,7 @@ public class DictionaryTest {
 		testDict(dict);
 	}
 	
-	/*private static void testBinaryTreeDictionary() {
+	private static void testBinaryTreeDictionary() {
 		Dictionary<String, String> dict = new BinaryTreeDictionary<>();
 		testDict(dict);
         
@@ -43,21 +43,21 @@ public class DictionaryTest {
         btd.insert(20, 0);
         btd.insert(30, 0);
         System.out.println("insert:");
-        btd.prettyPrint();
+        //btd.prettyPrint();
 
         btd.insert(40, 0);
         btd.insert(50, 0);
         System.out.println("insert:");
-        btd.prettyPrint();
+        //btd.prettyPrint();
 
         btd.insert(21, 0);
         System.out.println("insert:");
-        btd.prettyPrint();
+        //btd.prettyPrint();
 
         btd.insert(35, 0);
         btd.insert(60, 0);
         System.out.println("insert:");
-        btd.prettyPrint();
+        //btd.prettyPrint();
 
         System.out.println("For Each Loop:");
         for (Dictionary.Entry<Integer, Integer> e : btd) {
@@ -66,14 +66,14 @@ public class DictionaryTest {
 
         btd.remove(30);
         System.out.println("remove:");
-        btd.prettyPrint();
+        //btd.prettyPrint();
 
         btd.remove(35);
         btd.remove(40);
         btd.remove(50);
         System.out.println("remove:");
-        btd.prettyPrint();
-    }*/
+        //btd.prettyPrint();
+    }
 	
 	private static void testDict(Dictionary<String, String> dict) {
 		System.out.println("===== New Test Case ========================");
