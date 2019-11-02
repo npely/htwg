@@ -1,0 +1,90 @@
+Fragenkatalog Testat 2
+======================
+
+
+1. Wofür braucht man ein Dunkelbild?
+
+Zur Eliminierung des pixelweisen Offsets. Offset entsteht aufgrund von Fertigungstoleranzen
+und spontan durch Wäremzufuhr entstehenden Ladungsträgerpaaren, die zu einem unterschiedlichen Nullpunkt führen.
+
+2. Was bedeutet Vignettierung?
+
+Die Optik der Kamera üerträgt die Helligkeit nicht gleichmäßig auf den Sensor. Zum Beispiel Abdunklung an den Rändern des Bildes.
+
+3. Wie findet man die "dead pixels" einer Kamera?
+
+Im Weißbild als dunkle Punkte
+
+4. Wie sehen die Fourierkoeffizienten der zweiseitigen trigonometrischen Fourierreihe für 
+x(t) \= a cos(2 omega t) aus?
+
+5. Wie viele Terme hat die zweiseitige trigonometrische Fourierreihe von 1 + sin t + 
+3 cos 2t?
+
+2
+
+6. Welche Symmetrien hat die zweiseitige Fourierreihe?
+
+y-Achsen sysmmetrisch
+
+7. Aus welchen Grundsignalen besteht die komplexe Fourierreihe?
+
+8. Aus welchen Summentermen besteht die harmonische Form der Fourierreihe?
+
+Cosinus Termen
+
+9. Welchen Vorteil hat die trigonometrische Form der Fourierreihe gegenüber der
+harmonischen Form?
+
+In der harmonischen Form der Fourierreihe ist die Phase phi k innerhalb der Cosinusfunktion, die Amplitude r k außerhalb. Eine direkte Berechnung würde zu einem komplizierten nichtlinearen Gleichungssystem führen, für das keine analytische Lösung möglich ist.
+
+10. Was ist der Unterschied zwischen der Menge der zweidimensionalen Vektoren und den
+komplexen Zahlen?
+
+Die komplexen Zahlen können auch miteinander multipliziert und dividiert werden, so dass wieder eine
+komplexe Zahl herauskommt. Besitzen zwei Freiheitsgrade, Real- und Imaginärteil, die sich
+zur eleganten Darstellung der Fourierreihe eignen.
+
+11. Was ist der Unterschied zwischen dem Skalarprodukt in einem zweidimensionalen
+Vektorraum und der Multiplikation zweier komplexer Zahlen?
+
+Bei normalen Vektoren -> reele Zahl, bei komplexen Zahlen -> komplexe Zahl
+
+12. Was ist die Phase einer Sinusschwingung?
+
+13. Was haben komplexe Zahlen mit Sinusschwingungen zu tun?
+
+Das Sinussignal verhält sich wie eine komplexe Zahl, Cosinusanteil entspricht dem Realteil
+Sinusteil entspricht e^(i*omega*t)
+
+14. Wie berechnet sich die Frequenz einer Sinusschwingung, das aus der Summe einer Sinus-
+und einer Cosinusfunktion gleicher Frequenz entsteht?
+
+15. Was ist ein gerades Signal?
+
+Ein gerades Signal ist y-achsen symmetrisch, f(-t) = f(t)
+
+16. Was ist eine δ-Impulsfolge?
+
+Eine Folge von Nadelimpulsen.
+
+17. Wie unterscheidet sich das Spektrum periodischer Rechteckimpulse von einer
+Gauß-Impulsfolge und warum?
+
+Gaußimpulsfolgen weisen keine schnellen Übergänge auf. Das bedeutet sie besitzen auch keine
+plötzlichen Sprünge.
+
+Im Spektrum der Rechteckimpulse befinden sich jeweils zwei plötzliche Sprünge, die
+zur "Rechteckform" führen
+
+
+18. Was ist die Regellage?
+
+Bei einer zweiseitigen Fourierreihe geht das Spektrum auch in die negativen Frequenzen.
+Die positive Seite dieses Amplitudenspektrums heißt Regellage.
+
+19. Welches der unten aufgeführten Signale enthält keine unendlich hohen Frequenzen?
+
+20. Wie unterscheiden sich die Spektren von schnell und langsam veränderlichen Signalen?
+
+

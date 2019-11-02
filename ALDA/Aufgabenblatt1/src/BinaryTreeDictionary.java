@@ -132,6 +132,7 @@ public class BinaryTreeDictionary <K extends Comparable<? super K>, V> implement
             oldValue = p.value;
             p.value = value;
         }
+        p = balance(p);
         return p;
 
     }
@@ -195,6 +196,20 @@ public class BinaryTreeDictionary <K extends Comparable<? super K>, V> implement
     private static class MinEntry<K, V> {
         private K key;
         private V value;
+    }
+
+    public void prettyPrint() {
+        prettyPrintR(root, 0);
+    }
+
+    private void prettyPrintR(Node<K, V> p, int d) {
+        if (p == null)
+            return;
+        for (int i = 0; i < d; i++)
+            System.out.print("  ");
+        System.out.println(p.key.toString());
+        prettyPrintR(p.left, d + 1);
+        prettyPrintR(p.right, d + 1);
     }
 
     @Override
