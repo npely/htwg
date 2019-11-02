@@ -18,6 +18,8 @@ Im Weißbild als dunkle Punkte
 4. Wie sehen die Fourierkoeffizienten der zweiseitigen trigonometrischen Fourierreihe für 
 x(t) \= a cos(2 omega t) aus?
 
+a
+
 5. Wie viele Terme hat die zweiseitige trigonometrische Fourierreihe von 1 + sin t + 
 3 cos 2t?
 
@@ -28,6 +30,8 @@ x(t) \= a cos(2 omega t) aus?
 y-Achsen sysmmetrisch
 
 7. Aus welchen Grundsignalen besteht die komplexe Fourierreihe?
+
+sin und cos
 
 8. Aus welchen Summentermen besteht die harmonische Form der Fourierreihe?
 
@@ -52,6 +56,8 @@ Bei normalen Vektoren -> reele Zahl, bei komplexen Zahlen -> komplexe Zahl
 
 12. Was ist die Phase einer Sinusschwingung?
 
+Verschiebung phi der Schwingung entlang der t-Achse.
+
 13. Was haben komplexe Zahlen mit Sinusschwingungen zu tun?
 
 Das Sinussignal verhält sich wie eine komplexe Zahl, Cosinusanteil entspricht dem Realteil
@@ -66,7 +72,8 @@ Ein gerades Signal ist y-achsen symmetrisch, f(-t) = f(t)
 
 16. Was ist eine δ-Impulsfolge?
 
-Eine Folge von Nadelimpulsen.
+Eine Folge von Nadelimpulsen. Also unendliche steile und hohe Rechteckimpulse, die denselben
+Flächeninhalt wie das ursprüngliche Rechteck beinhalten.
 
 17. Wie unterscheidet sich das Spektrum periodischer Rechteckimpulse von einer
 Gauß-Impulsfolge und warum?
@@ -86,5 +93,8 @@ Die positive Seite dieses Amplitudenspektrums heißt Regellage.
 19. Welches der unten aufgeführten Signale enthält keine unendlich hohen Frequenzen?
 
 20. Wie unterscheiden sich die Spektren von schnell und langsam veränderlichen Signalen?
+
+Schnell veränderliche Signale besitzen meist Kanten und steile Übergänge, wo hingegen
+langsam veränderliche Signale eine kurvenartige Form besitzen.
 
 
