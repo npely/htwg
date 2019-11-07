@@ -68,6 +68,10 @@ public class TUI {
         System.out.println("Creating new Dictionary");
         if (args[1].equals("HashDictionary"))
             dic = new HashDictionary(3);
+
+        else if (args[1].equals("Binary"))
+            dic = new BinaryTreeDictionary<>();
+
         else
             dic = new SortedArrayDictionary();
     }
@@ -83,7 +87,6 @@ public class TUI {
 
         File selectedFile = null;
         String line;
-        //List<String> =
 
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File("/home/niklas13/Programme/htwg/ALDA"));

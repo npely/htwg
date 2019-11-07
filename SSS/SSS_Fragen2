@@ -61,7 +61,7 @@ Verschiebung phi der Schwingung entlang der t-Achse.
 13. Was haben komplexe Zahlen mit Sinusschwingungen zu tun?
 
 Das Sinussignal verhält sich wie eine komplexe Zahl, Cosinusanteil entspricht dem Realteil
-Sinusteil entspricht e^(i*omega*t)
+Sinusanteil entspricht dem Imaginärteil von e^(i*omega*t)
 
 14. Wie berechnet sich die Frequenz einer Sinusschwingung, das aus der Summe einer Sinus-
 und einer Cosinusfunktion gleicher Frequenz entsteht?
