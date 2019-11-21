@@ -245,6 +245,7 @@ public class BinaryTreeDictionary <K extends Comparable<? super K>, V> implement
 
                 else if (this.currentNode.right != null)
                     this.currentNode = leftMostDescendant(this.currentNode.right);
+
                 else
                     this.currentNode = parentOfLeftMostAncestor(this.currentNode);
 
