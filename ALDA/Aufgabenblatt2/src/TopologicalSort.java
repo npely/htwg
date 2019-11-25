@@ -20,8 +20,34 @@ public class TopologicalSort<V> {
 	 * @param g gerichteter Graph.
 	 */
 	public TopologicalSort(DirectedGraph<V> g) {
-        // ...
+        topSort(g);
     }
+
+    public List<V> topSort(DirectedGraph<V> g) {
+
+		LinkedList<V> q = new LinkedList<>();
+
+		for(V v : g.getVertexSet()) {
+			if (g.getInDegree(v) == 0)
+				q.add(v);
+		}
+
+		while (!q.isEmpty()) {
+			for (V v : g.getVertexSet()) {
+				q.remove(v);
+				ts.add(v);
+				for (V w : g.getSuccessorVertexSet(v)) {
+					if ((g.getInDegree(w) - 1) == 0)
+						q.add(w);
+				}
+			}
+		}
+
+		if (ts.size() != g.getNumberOfVertexes())
+			return null;
+		else
+			return ts;
+	}
     
 	/**
 	 * Liefert eine nicht modifizierbare Liste (unmodifiable view) zurück,

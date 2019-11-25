@@ -4,10 +4,7 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Klasse für Bestimmung aller strengen Komponenten.
@@ -33,15 +30,30 @@ public class StrongComponents<V> {
 	 * @param g gerichteter Graph.
 	 */
 	public StrongComponents(DirectedGraph<V> g) {
-		// ...
+		ksa(g);
 	}
-	
+
+
 	/**
-	 * 
+	 *
 	 * @return Anzahl der strengen Komponeneten.
 	 */
 	public int numberOfComp() {
 		return comp.size();
+	}
+
+	private List<V> reversePostOrder(DirectedGraph<V> g) {
+		DepthFirstOrder<V> dfo = new DepthFirstOrder<>(g);
+		List<V> postOrderList = new LinkedList<>(dfo.postOrder());
+		Collections.reverse(postOrderList);
+		return postOrderList;
+	}
+
+	public void ksa(DirectedGraph<V> g) {
+		List<V> pi = reversePostOrder(g);
+		DirectedGraph<V> gi = g.invert();
+
+		List<V> gipi = reversePostOrder(gi);
 	}
 
 	@Override
@@ -113,6 +125,6 @@ public class StrongComponents<V> {
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		test1();
-		test2();
+		//test2();
 	}
 }
