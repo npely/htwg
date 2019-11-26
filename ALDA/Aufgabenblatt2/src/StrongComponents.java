@@ -67,8 +67,6 @@ public class StrongComponents<V> {
 	}
 
 	public void ksaR(V v, DirectedGraph<V> g, int counter_teilbaum) {
-		besucht.add(v);
-
 		for (var p : g.getSuccessorVertexSet(v)) {
 			if (!besucht.contains(p)) {
 				comp.get(counter_teilbaum).add(p);
@@ -82,7 +80,9 @@ public class StrongComponents<V> {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (var v : comp.entrySet()) {
-			sb.append("Component ").append(v.getKey()).append(" : ").append(v.getValue()).append(", ");
+			sb.append("Component ").append(v.getKey()).append(" : ");
+			for (var e : v.getValue())
+				sb.append(e.toString()).append(", ");
 			sb.append("\n");
 		}
 		return sb.toString();
