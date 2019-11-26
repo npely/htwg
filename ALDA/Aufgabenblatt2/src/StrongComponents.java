@@ -23,6 +23,8 @@ public class StrongComponents<V> {
     // Component 3: 4,
 
 	private final Map<Integer,Set<V>> comp = new TreeMap<>();
+	private Set<V> besucht = new TreeSet<>();
+	private int counter_teilbaum = 0;
 	
 	/**
 	 * Ermittelt alle strengen Komponenten mit
@@ -53,12 +55,37 @@ public class StrongComponents<V> {
 		List<V> pi = reversePostOrder(g);
 		DirectedGraph<V> gi = g.invert();
 
-		List<V> gipi = reversePostOrder(gi);
+		for (V v : pi) {
+			if (!besucht.contains(v)) {
+				comp.put(counter_teilbaum, new TreeSet<>());
+				comp.get(counter_teilbaum).add(v);
+				besucht.add(v);
+				ksaR(v, gi, counter_teilbaum);
+				counter_teilbaum++;
+			}
+		}
+	}
+
+	public void ksaR(V v, DirectedGraph<V> g, int counter_teilbaum) {
+		besucht.add(v);
+
+		for (var p : g.getSuccessorVertexSet(v)) {
+			if (!besucht.contains(p)) {
+				comp.get(counter_teilbaum).add(p);
+				besucht.add(p);
+				ksaR(p, g, counter_teilbaum);
+			}
+		}
 	}
 
 	@Override
 	public String toString() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		StringBuilder sb = new StringBuilder();
+		for (var v : comp.entrySet()) {
+			sb.append("Component ").append(v.getKey()).append(" : ").append(v.getValue()).append(", ");
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 	
 	/**
@@ -106,7 +133,7 @@ public class StrongComponents<V> {
 			// Component 0: 5, 6, 7, 
         	// Component 1: 8, 
             // Component 2: 1, 2, 3, 
-            // Component 3: 4, 
+            // Component 3: 4,
 	}
 	
 	private static void test2() throws FileNotFoundException {
@@ -125,6 +152,6 @@ public class StrongComponents<V> {
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		test1();
-		//test2();
+		test2();
 	}
 }

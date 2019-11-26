@@ -36,7 +36,6 @@ public class DepthFirstOrder<V> {
                 numberOfDFTrees++;
             }
         }
-
     }
 
     void visitDF(V v, DirectedGraph<V> g, Set<V> besucht) {
