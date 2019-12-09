@@ -1,9 +1,7 @@
 // O. Bittel;
 // 22.02.2017
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Klasse zur Erstellung einer topologischen Sortierung.
@@ -24,23 +22,23 @@ public class TopologicalSort<V> {
     }
 
     public List<V> topSort(DirectedGraph<V> g) {
-
-		LinkedList<V> q = new LinkedList<>();
+		Map<V, Integer> deg = new HashMap<>();
+		Queue<V> q = new LinkedList<>();
 
 		for(V v : g.getVertexSet()) {
-			if (g.getInDegree(v) == 0)
+			deg.put(v, g.getInDegree(v));
+			if (deg.get(v) == 0)
 				q.add(v);
 		}
 
 		while (!q.isEmpty()) {
-			for (V v : g.getVertexSet()) {
-				q.remove(v);
+				V v = q.remove();
 				ts.add(v);
 				for (V w : g.getSuccessorVertexSet(v)) {
-					if ((g.getInDegree(w) - 1) == 0)
+					deg.put(w, deg.get(w) - 1);
+					if (deg.get(w) == 0)
 						q.add(w);
 				}
-			}
 		}
 
 		if (ts.size() != g.getNumberOfVertexes())
@@ -57,7 +55,6 @@ public class TopologicalSort<V> {
 	public List<V> topologicalSortedList() {
         return Collections.unmodifiableList(ts);
     }
-    
 
 	public static void main(String[] args) {
 		DirectedGraph<Integer> g = new AdjacencyListDirectedGraph<>();
@@ -74,6 +71,35 @@ public class TopologicalSort<V> {
 		
 		if (ts.topologicalSortedList() != null) {
 			System.out.println(ts.topologicalSortedList()); // [1, 2, 3, 4, 5, 6, 7]
+		}
+
+		DirectedGraph<String> g2 = new AdjacencyListDirectedGraph<>();
+		g2.addEdge("Unterhose", "Hose");
+		g2.addEdge("Hose", "Guertel");
+		g2.addEdge("Hose", "Schuhe");
+		g2.addEdge("Socken", "Schuhe");
+		g2.addEdge("Schuhe", "Handschuhe");
+		g2.addEdge("Unterhemd", "Hemd");
+		g2.addEdge("Hemd", "Pulli");
+		g2.addEdge("Pulli", "Mantel");
+		g2.addEdge("Guertel", "Mantel");
+		g2.addEdge("Mantel", "Schal");
+		g2.addEdge("Schal", "Handschuhe");
+		g2.addEdge("Muetze", "Handschuhe");
+		System.out.println(g2);
+
+		TopologicalSort<String> ts2 = new TopologicalSort<>(g2);
+
+		if (ts2.topologicalSortedList() != null) {
+			System.out.println(ts2.topologicalSortedList());
+		}
+
+		g2.addEdge("Schal", "Hose");
+
+		TopologicalSort<String> ts3 = new TopologicalSort<>(g2);
+
+		if (ts3.topologicalSortedList() != null) {
+			System.out.println(ts3.topologicalSortedList());
 		}
 	}
 }

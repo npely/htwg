@@ -35,7 +35,7 @@ INSERT INTO Land (name)
 INSERT INTO Land (name) 
         VALUES ('Schweiz');
 INSERT INTO Land (name) 
-        VALUES ('Türkei');
+        VALUES ('Tï¿½rkei');
 INSERT INTO Land (name) 
         VALUES ('Ukraine');
 INSERT INTO Land (name) 
@@ -44,5 +44,7 @@ INSERT INTO Land (name)
         VALUES ('Westjordanland');
 INSERT INTO Land (name) 
         VALUES ('Zypern');
+INSERT INTO Land (name) 
+        VALUES ('Spanien');
 
 commit;

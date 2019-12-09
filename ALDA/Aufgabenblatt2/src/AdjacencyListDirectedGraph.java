@@ -104,12 +104,12 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 
     @Override
     public Set<V> getPredecessorVertexSet(V v) {
-		return pred.get(v).keySet();
+		return Collections.unmodifiableSet(pred.get(v).keySet());
     }
 
     @Override
     public Set<V> getSuccessorVertexSet(V v) {
-		return succ.get(v).keySet();
+		return Collections.unmodifiableSet(succ.get(v).keySet());
     }
 
     @Override

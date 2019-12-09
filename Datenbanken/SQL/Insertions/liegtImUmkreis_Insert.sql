@@ -1,4 +1,4 @@
 INSERT INTO liegtImUmkreis (Entfernung, WohnungsID, TouriAttrID) 
-        VALUES (2.4, 100021, 100000000);
+        VALUES (2.4, 100083, 100000000);
         
 commit;
