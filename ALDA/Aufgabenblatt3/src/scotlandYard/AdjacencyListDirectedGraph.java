@@ -76,7 +76,7 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 
     @Override
     public boolean containsEdge(V v, V w) {
-		if (succ.get(v).containsKey(w) && pred.get(w).containsKey(v))
+		if (succ.get(v).containsKey(w) && containsVertex(v) && containsVertex(w))
 			return true;
 		return false;
     }

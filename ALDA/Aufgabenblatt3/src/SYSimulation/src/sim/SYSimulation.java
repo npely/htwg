@@ -1,9 +1,11 @@
-package sim;
+package SYSimulation.src.sim;
+
+import SYSimulation.src.gui.SimGUI;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.io.IOException;
 
-import gui.SimGUI;
 
 
 /** <b>Scotland Yard Simulation, Algorithmen und Datenstrukturen, WS 2011/2012</b><p>

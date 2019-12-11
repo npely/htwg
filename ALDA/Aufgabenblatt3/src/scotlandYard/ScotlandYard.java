@@ -1,7 +1,8 @@
-/*package scotlandYard;
+package scotlandYard;
+
+import SYSimulation.src.sim.SYSimulation;
 
 import java.io.FileNotFoundException;
-import sim.SYSimulation;
 import java.awt.Color;
 import java.io.IOException;
 
@@ -12,14 +13,14 @@ import java.util.Map;
 import java.util.Scanner;
 
 
-*//**
+/**
  * Kürzeste Wege im Scotland-Yard Spielplan mit A* und Dijkstra.
  * @author Oliver Bittel
  * @since 27.02.2019
- *//*
+ */
 public class ScotlandYard {
 
-	*//**
+	/**
 	 * Fabrikmethode zur Erzeugung eines gerichteten Graphens für den Scotland-Yard-Spielplan.
 	 * <p>
 	 * Liest die Verbindungsdaten von der Datei ScotlandYard_Kanten.txt.
@@ -31,13 +32,48 @@ public class ScotlandYard {
 	 * eine Kante von u nach v als auch von v nach u eingetragen.
 	 * @return Gerichteter und Gewichteter Graph für Scotland-Yard.
 	 * @throws FileNotFoundException
-	 *//*
+	 */
 	public static DirectedGraph<Integer> getGraph() throws FileNotFoundException {
 
 		DirectedGraph<Integer> sy_graph = new AdjacencyListDirectedGraph<>();
 		Scanner in = new Scanner(new File("ScotlandYard_Kanten.txt"));
 
-		// ...
+		String line;
+
+		while (in.hasNextLine()) {
+			line = in.nextLine();
+			String[] w = line.split(" ");
+
+			int u = Integer.parseInt(w[0]);
+			int v = Integer.parseInt(w[1]);
+
+			int dist = 0;
+			int oldDist = Integer.MAX_VALUE;
+
+			sy_graph.addVertex(u);
+			sy_graph.addVertex(v);
+
+			switch(w[2]) {
+				case "Taxi":
+					dist = 2;
+					break;
+				case "Bus":
+					dist = 3;
+					break;
+				case "UBahn":
+					dist = 5;
+					break;
+			}
+
+			if (sy_graph.containsEdge(u, v)) {
+				oldDist = (int) sy_graph.getWeight(u, v);
+			}
+			if (oldDist < dist)
+				dist = oldDist;
+
+			sy_graph.addEdge(u, v, dist);
+			sy_graph.addEdge(v, u, dist);
+		}
 		
 		// Test, ob alle Kanten eingelesen wurden: 
 		System.out.println("Number of Vertices:       " + sy_graph.getNumberOfVertexes());	// 199
@@ -52,7 +88,7 @@ public class ScotlandYard {
 	}
 
 
-	*//**
+	/**
 	 * Fabrikmethode zur Erzeugung einer Heuristik für die Schätzung
 	 * der Distanz zweier Knoten im Scotland-Yard-Spielplan.
 	 * Die Heuristik wird für A* benötigt.
@@ -63,22 +99,22 @@ public class ScotlandYard {
 	 * berechnet einen skalierten Euklidischen Abstand.
 	 * @return Heuristik für Scotland-Yard.
 	 * @throws FileNotFoundException
-	 *//*
+	 */
 	public static Heuristic<Integer> getHeuristic() throws FileNotFoundException {
 		return new ScotlandYardHeuristic();
 	}
 
-	*//**
+	/**
 	 * Scotland-Yard Anwendung.
 	 * @param args wird nicht verewendet.
 	 * @throws FileNotFoundException
-	 *//*
+	 */
 	public static void main(String[] args) throws FileNotFoundException {
 
 		DirectedGraph<Integer> syGraph = getGraph();
 		
-		Heuristic<Integer> syHeuristic = null; // Dijkstra
-		//Heuristic<Integer> syHeuristic = getHeuristic(); // A*
+		//Heuristic<Integer> syHeuristic = null; // Dijkstra
+		Heuristic<Integer> syHeuristic = getHeuristic(); // A*
 
 		ShortestPath<Integer> sySp = new ShortestPath<Integer>(syGraph,syHeuristic);
 
@@ -128,7 +164,7 @@ public class ScotlandYard {
 }
 
 class ScotlandYardHeuristic implements Heuristic<Integer> {
-	private Map<Integer,Point> coord; // Ordnet jedem Knoten seine Koordinaten zu
+	public Map<Integer,Point> coord = new HashMap<>(); // Ordnet jedem Knoten seine Koordinaten zu
 
 	private static class Point {
 		int x;
@@ -140,11 +176,30 @@ class ScotlandYardHeuristic implements Heuristic<Integer> {
 	}
 
 	public ScotlandYardHeuristic() throws FileNotFoundException {
-		// ...
+		Scanner in = new Scanner(new File("ScotlandYard_Knoten.txt"));
+
+		String line;
+
+		while (in.hasNextLine()) {
+			line = in.nextLine();
+			String[] w = line.split("[\\t|\\s]+");
+
+			Point p = new Point(Integer.parseInt(w[1]), Integer.parseInt(w[2]));
+
+			coord.put(Integer.parseInt(w[0]), p);
+		}
 	}
 
 	public double estimatedCost(Integer u, Integer v) {
-		// ...
+		ScotlandYardHeuristic.Point vP = coord.get(u);
+		ScotlandYardHeuristic.Point wP = coord.get(v);
+
+		int x = (vP.x - wP.x);
+		int y = (vP.y - vP.y);
+
+		double betrag = Math.sqrt((x * x) + (y * y));
+
+		return betrag;
 	}
-}*/
+}
 

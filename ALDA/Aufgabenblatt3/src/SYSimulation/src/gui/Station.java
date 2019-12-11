@@ -1,4 +1,4 @@
-package gui;
+package SYSimulation.src.gui;
 
 import java.awt.Color;
 import java.awt.Point;

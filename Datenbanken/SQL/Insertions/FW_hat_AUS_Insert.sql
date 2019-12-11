@@ -1,71 +1,97 @@
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Badewanne', 100000);
+        VALUES ('Badewanne', 100080);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Wlan', 100000);
+        VALUES ('Wlan', 100080);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Küche', 100000);        
+        VALUES ('Kï¿½che', 100080);        
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Microwelle', 100000);
+        VALUES ('Microwelle', 100080);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('TV', 100000);
+        VALUES ('TV', 100080);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Balkon', 100000);
+        VALUES ('Balkon', 100080);
 
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Badewanne', 100020);
+        VALUES ('Badewanne', 100102);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Wlan', 100020);
+        VALUES ('Wlan', 100102);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Küche', 100020);        
+        VALUES ('Kï¿½che', 100102);        
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Microwelle', 100020);
+        VALUES ('Microwelle', 100102);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('TV', 100020);
+        VALUES ('TV', 100102);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Balkon', 100020);
+        VALUES ('Balkon', 100102);
 
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Badewanne', 100021);
+        VALUES ('Badewanne', 100103);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Wlan', 100021);
+        VALUES ('Wlan', 100103);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Küche', 100021);        
+        VALUES ('Kï¿½che', 100103);        
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Microwelle', 100021);
+        VALUES ('Microwelle', 100103);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('TV', 100021);
+        VALUES ('TV', 100103);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Balkon', 100021);
+        VALUES ('Balkon', 100103);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Sauna', 100021);
+        VALUES ('Sauna', 100103);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Garten', 100021);        
+        VALUES ('Garten', 100103);        
 
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Badewanne', 100022);
+        VALUES ('Badewanne', 100104);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Wlan', 100022);
+        VALUES ('Wlan', 100104);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Küche', 100022);        
+        VALUES ('Kï¿½che', 100104);        
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Microwelle', 100022);
+        VALUES ('Microwelle', 100104);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('TV', 100022);
+        VALUES ('TV', 100104);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Balkon', 100022);
+        VALUES ('Balkon', 100104);
 
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Badewanne', 100023);
+        VALUES ('Badewanne', 100104);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Wlan', 100023);
+        VALUES ('Wlan', 100104);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Küche', 100023);        
+        VALUES ('Kï¿½che', 100104);        
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Microwelle', 100023);
+        VALUES ('Microwelle', 100104);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('TV', 100023);
+        VALUES ('TV', 100104);
 INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
-        VALUES ('Balkon', 100023);
+        VALUES ('Balkon', 100104);
+        
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Badewanne', 100105);
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Wlan', 100105);
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Kï¿½che', 100105);        
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Microwelle', 100105);
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('TV', 100105);
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Balkon', 100105);
+        
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Badewanne', 100106);
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Wlan', 100106);
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Kï¿½che', 100106);        
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Microwelle', 100106);
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('TV', 100106);
+INSERT INTO FW_hat_AUS (AusstattungsName, WohnungsID) 
+        VALUES ('Balkon', 100106);
 
 commit;
         

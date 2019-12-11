@@ -1,6 +1,5 @@
-package sim;
+package SYSimulation.src.sim;
 
-import sim.SYSimulation;
 import java.awt.Color;
 import java.io.IOException;
 

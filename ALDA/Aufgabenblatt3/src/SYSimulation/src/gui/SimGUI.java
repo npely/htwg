@@ -1,6 +1,6 @@
-package gui;
+package SYSimulation.src.gui;
 
-import gui.Toolbar.ToolbarState;
+import SYSimulation.src.gui.Toolbar.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

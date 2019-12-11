@@ -1,8 +1,8 @@
 package scotlandYard;// O. Bittel;
 // 28.02.2019
 
+import SYSimulation.src.sim.SYSimulation;
 import scotlandYard.DirectedGraph;
-import sim.SYSimulation;
 
 import java.util.*;
 // ...
