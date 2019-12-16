@@ -148,13 +148,18 @@ public class ScotlandYard {
 		System.out.println("Distance = " + sySp.getDistance());
 		List<Integer> sp = sySp.getShortestPath();
 
+		for (int c : sySp.shortP) {
+			sim.visitStation(c, Color.BLUE);
+		}
+
 		int a = -1;
 		for (int b : sp) {
 			if (a != -1)
-			sim.drive(a, b, Color.RED.darker());
+				sim.drive(a, b, Color.RED.darker());
 			sim.visitStation(b);
 			a = b;
 		}
+
 
         sim.stopSequence();
 
@@ -199,7 +204,7 @@ class ScotlandYardHeuristic implements Heuristic<Integer> {
 
 		double betrag = Math.sqrt((x * x) + (y * y));
 
-		return betrag;
+		return (betrag / 30);
 	}
 }
 

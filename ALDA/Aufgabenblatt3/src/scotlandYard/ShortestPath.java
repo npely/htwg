@@ -24,6 +24,7 @@ public class ShortestPath<V> {
 	double inf = Double.MAX_VALUE;
 	V start;
 	V ziel;
+	LinkedList <V> shortP = new LinkedList<>();
 
 	/**
 	 * Konstruiert ein Objekt, das im Graph g k&uuml;rzeste Wege 
@@ -70,6 +71,7 @@ public class ShortestPath<V> {
 	}
 
 	private boolean shortestPath(V s, V z, DirectedGraph<V> g, Map<V, Double> dist, Map<V, V> pred) {
+		shortP.clear();
 		LinkedList<V> kl = new LinkedList<>();
 
 		start = s;
@@ -85,13 +87,14 @@ public class ShortestPath<V> {
 
 		while (!kl.isEmpty()) {
 
-			double minimalDist = inf;
 			double estimated = 0.0;
 			V minVertex = s;
+			double minimalDist = inf;
 
 			for (var v : kl) {
 				if (h != null)
 					estimated = h.estimatedCost(v, z);
+
 				if ((dist.get(v) + estimated) < minimalDist) {
 					minimalDist = dist.get(v) + estimated;
 					minVertex = v;
@@ -99,6 +102,8 @@ public class ShortestPath<V> {
 			}
 			kl.remove(minVertex);
 			V v = minVertex;
+
+			shortP.add(minVertex);
 
 			if (v.equals(z))
 				return true;
