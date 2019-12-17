@@ -40,6 +40,7 @@ public class ShortestPath<V> {
 		dist = new TreeMap<>();
 		pred = new TreeMap<>();
 		graph = g;
+		this.h = h;
 	}
 
 	/**
@@ -87,26 +88,32 @@ public class ShortestPath<V> {
 
 		while (!kl.isEmpty()) {
 
-			double estimated = 0.0;
 			V minVertex = s;
 			double minimalDist = inf;
 
 			for (var v : kl) {
-				if (h != null)
-					estimated = h.estimatedCost(v, z);
-
-				if ((dist.get(v) + estimated) < minimalDist) {
-					minimalDist = dist.get(v) + estimated;
-					minVertex = v;
+				if (h == null) {
+					if (dist.get(v) < minimalDist) {
+						minimalDist = dist.get(v);
+						minVertex = v;
+					}
+				} else {
+					if ((dist.get(v) + h.estimatedCost(v, z)) < minimalDist) {
+						minimalDist = dist.get(v) + h.estimatedCost(v, z);
+						minVertex = v;
+					}
+					if (v.equals(z)) {
+						shortP.add(v);
+						return true;
+					}
 				}
 			}
+
 			kl.remove(minVertex);
 			V v = minVertex;
 
 			shortP.add(minVertex);
 
-			if (v.equals(z))
-				return true;
 			for (V w : g.getSuccessorVertexSet(v)) {
 				if (dist.get(w) == inf)
 					kl.add(w);

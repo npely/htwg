@@ -113,8 +113,8 @@ public class ScotlandYard {
 
 		DirectedGraph<Integer> syGraph = getGraph();
 		
-		//Heuristic<Integer> syHeuristic = null; // Dijkstra
-		Heuristic<Integer> syHeuristic = getHeuristic(); // A*
+		Heuristic<Integer> syHeuristic = null; // Dijkstra
+		//Heuristic<Integer> syHeuristic = getHeuristic(); // A*
 
 		ShortestPath<Integer> sySp = new ShortestPath<Integer>(syGraph,syHeuristic);
 
@@ -162,13 +162,12 @@ public class ScotlandYard {
 
 
         sim.stopSequence();
-
-
     }
 
 }
 
 class ScotlandYardHeuristic implements Heuristic<Integer> {
+
 	public Map<Integer,Point> coord = new HashMap<>(); // Ordnet jedem Knoten seine Koordinaten zu
 
 	private static class Point {
@@ -200,11 +199,11 @@ class ScotlandYardHeuristic implements Heuristic<Integer> {
 		ScotlandYardHeuristic.Point wP = coord.get(v);
 
 		int x = (vP.x - wP.x);
-		int y = (vP.y - vP.y);
+		int y = (vP.y - wP.y);
 
 		double betrag = Math.sqrt((x * x) + (y * y));
 
-		return (betrag / 30);
+		return betrag / 30;
 	}
 }
 
