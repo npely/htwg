@@ -112,6 +112,8 @@ public class ShortestPath<V> {
 			kl.remove(minVertex);
 			V v = minVertex;
 
+			System.out.println("Besuchter Knoten " + v + " mit d: " + dist.get(v));
+
 			shortP.add(minVertex);
 
 			for (V w : g.getSuccessorVertexSet(v)) {

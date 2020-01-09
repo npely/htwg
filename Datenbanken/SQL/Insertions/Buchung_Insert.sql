@@ -16,5 +16,7 @@ INSERT INTO Buchung (Datum, Anfangsdatum, Enddatum, Buchungsnr, KundenID, Wohnun
         VALUES ('1.4.20', '10.4.20', '5.5.20', Buchungsnr.nextVal, 100000052, 100104);
 INSERT INTO Buchung (Datum, Anfangsdatum, Enddatum, Buchungsnr, KundenID, WohnungsID) 
         VALUES ('28.11.20', '1.12.20', '2.12.20', Buchungsnr.nextVal, 100000053, 100081);
+INSERT INTO Buchung (Datum, Anfangsdatum, Enddatum, Buchungsnr, KundenID, WohnungsID) 
+        VALUES ('12.05.19', '24.06.19', '05.07.19', Buchungsnr.nextVal, 110000000, 100100);
         
 commit;

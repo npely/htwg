@@ -9,7 +9,7 @@ create table Ausstattung(
 create table Adresse(
     PLZ VARCHAR2(10) NOT NULL,
     Ort VARCHAR2(50) NOT NULL,
-    Straße VARCHAR2(50) NOT NULL,
+    Straï¿½e VARCHAR2(50) NOT NULL,
     Hausnummer VARCHAR2(4) NOT NULL,
     AdressID CHAR(9) NOT NULL check (REGEXP_LIKE ( AdressID, '^[0-9]{9}$' )), 
     LandName VARCHAR2(74) NOT NULL,
@@ -111,6 +111,21 @@ create table Bewertung(
     CONSTRAINT pk_Bewertung PRIMARY KEY(BewertungsID),
     CONSTRAINT fk_Bewertung FOREIGN KEY(Buchungsnr)
                 REFERENCES Buchung(Buchungsnr));
+                
+CREATE TABLE STORNIERUNG(
+    StornierungsDatum DATE NOT NULL,
+    BuchungsDatum DATE NOT NULL,
+    Anfangsdatum DATE NOT NULL,
+    Enddatum DATE NOT NULL,
+    Buchungsnr CHAR(12) NOT NULL check (REGEXP_LIKE ( Buchungsnr, '^[0-9]{12}$' )),
+    KundenID CHAR(9) NOT NULL check (REGEXP_LIKE ( KundenID, '^[0-9]{9}$' )),
+    WohnungsID CHAR(6) NOT NULL check (REGEXP_LIKE ( WohnungsID, '^[0-9]{6}$' )),
+    CONSTRAINT pk_Stornierung PRIMARY KEY(Buchungsnr),
+    CONSTRAINT fk1_Stornierung FOREIGN KEY(KundenID)
+                REFERENCES Kunde(KundenID),
+    CONSTRAINT fk2_Stornierung FOREIGN KEY(WohnungsID)
+                REFERENCES Ferienwohnung(WohnungsID));
+
 
 commit;
 
