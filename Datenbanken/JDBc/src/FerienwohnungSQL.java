@@ -5,7 +5,7 @@ public class FerienwohnungSQL {
     public static void main(String args[]) {
 
         String name = null;
-        String passwd = null;
+        String passwd = "BTSSuga3";
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         Connection conn = null;
         Statement stmt = null;
@@ -15,12 +15,19 @@ public class FerienwohnungSQL {
         String enddatum = "";
         String land = "";
         String ausstattung = "";
+        String kundenid = "";
+        Boolean neuerKunde = true;
+        String Kname = "";
+        String IBAN = "";
+        String Newsletter = "";
+        String Passwort = "";
+        String wohnungsid = "";
 
 
-        System.out.println("Benutzername: ");
-        name = "dbsys63";
-        System.out.println("Passwort: ");
-        passwd = "kunde";
+
+        //System.out.println("Benutzername: ");
+        name = "dbsys13";
+        //System.out.println("Passwort: ");
 
         try {
             System.out.println("Land: ");
@@ -50,38 +57,79 @@ public class FerienwohnungSQL {
             conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE); 			// Transaction Isolations-Level setzen
             conn.setAutoCommit(false);													// Kein automatisches Commit
 
-            stmt = conn.createStatement();  											// Statement-Objekt erzeugen
+            stmt = conn.createStatement();                                              // Statement-Objekt erzeugen
 
-            String myUpdateQuery = "INSERT INTO pers(pnr, name, jahrg, eindat, gehalt, anr) " +
-                    "VALUES('124', 'Huber', 1980, sysdate, 80000, 'K51')";				// Mitarbeiter hinzufügen
-            stmt.executeUpdate(myUpdateQuery);
+            String AusstattungView = "";
+            String selectView = "";
 
-            String mySelectQuery = "SELECT pnr, name, jahrg, TO_CHAR(eindat, 'YYYY') " +
-                    "AS eindat, gehalt, beruf, anr, vnr FROM pers";
+            if (!ausstattung.isEmpty()) {
+                AusstattungView =  "CREATE OR REPLACE VIEW ANZAUS ( WohnungsID, Ausstattungen ) AS " +
+                        "SELECT fw.WohnungsID, fw.Ausstattungsname " +
+                        "FROM FW_HAT_AUS fw " +
+                        "WHERE fw.Ausstattungsname = " + "\'" + ausstattung + "\'";
 
-            String mySelectQuery1 = "SELECT f.Name, AVG(bw.Sterne) AS \"durchschnittliche Bewertung\"\n" +
-                    "FROM Bewertung bw\n" +
-                    "INNER JOIN Buchung b ON b.BuchungsNR = bw.BuchungsNR\n" +
-                    "INNER JOIN Ferienwohnung f ON b.WohnungsID = f.WohnungsID\n" +
-                    "INNER JOIN Adresse a ON f.AdressID = a.AdressID\n" +
-                    "WHERE a.Landname = 'Spanien' AND f.WohnungsID NOT IN \n" +
-                    "GROUP BY f.Name\n" +
-                    "ORDER BY AVG(bw.Sterne) DESC;";
+                stmt.executeQuery(AusstattungView);
 
-            rset = stmt.executeQuery(mySelectQuery);									// Query ausführen
+                selectView = "AND f.WohnungsID IN " +
+                        "(SELECT a.WohnungsID " +
+                        "FROM ANZAUS a)";
+            }
+
+            String mySelectQuery1 = "SELECT f.Name, AVG(bw.Sterne) AS \"durchschnittliche Bewertung\" " +
+                    "FROM Bewertung bw " +
+                    "INNER JOIN Buchung b ON b.BuchungsNR = bw.BuchungsNR " +
+                    "INNER JOIN Ferienwohnung f ON b.WohnungsID = f.WohnungsID " +
+                    "INNER JOIN Adresse a ON f.AdressID = a.AdressID " +
+                    "WHERE a.Landname = " + "\'" + land + "\' " + "AND f.WohnungsID NOT IN " +
+                    "(SELECT f.WohnungsID " +
+                    "FROM Buchung b " +
+                    "WHERE b.Anfangsdatum BETWEEN" + "\'" + anfangsdatum + "\' " +  "AND" + "\'" + enddatum + "\' " +
+                    "OR  b.Enddatum BETWEEN" + "\'" + anfangsdatum + "\' " +  "AND" + "\'" + enddatum + "\' " +
+                    "OR b.Anfangsdatum < " + "\'" + anfangsdatum + "\' " + "AND b.Enddatum >" + "\'" + enddatum + "\' " + ") " +
+                    selectView + " " +
+                    "GROUP BY f.Name " +
+                    "ORDER BY AVG(bw.Sterne) DESC";
+
+
+
+            System.out.println(mySelectQuery1);
+
+            rset = stmt.executeQuery(mySelectQuery1);									// Query ausführen
 
             while(rset.next())
-                System.out.println(rset.getInt("pnr") + " "
-                        + rset.getString("name") + " "
-                        + rset.getInt("jahrg") + " "
-                        + rset.getString("eindat") + " "
-                        + rset.getInt("gehalt") + " "
-                        + rset.getString("beruf") + " "
-                        + rset.getString("anr") + " "
-                        + rset.getInt("vnr"));
+                System.out.println(rset.getString("Name") + " "
+                        + rset.getDouble("durchschnittliche Bewertung"));
 
-            myUpdateQuery = "DELETE FROM pers WHERE pnr = '124'";
-            stmt.executeUpdate(myUpdateQuery);											// Mitarbeiter wieder löschen
+            System.out.println("Buchen:");
+            try {
+                System.out.println("KundenID:");
+                kundenid = in.readLine();
+                System.out.println("Anfangsdatum");
+                anfangsdatum = in.readLine();
+                System.out.println("Enddatum");
+                enddatum = in.readLine();
+                System.out.println("WohnungsID");
+                wohnungsid = in.readLine();
+
+               /* rset = stmt.executeQuery("SELECT KundenID FROM Kunde");
+                while(rset.next()) {
+                    if (kundenid.equals(rset.getString("KundenID"))) {
+                        neuerKunde = false;
+                    }
+                }*/
+            } catch (IOException e) {
+                System.out.println("Fehler beim Lesen der Eingabe: " + e);
+                System.exit(-1);
+            }
+
+            String updateQuery = "INSERT INTO Buchung (Datum, Anfangsdatum, Enddatum, Buchungsnr, KundenID, WohnungsID) " +
+                    "VALUES (SYSDATE, '" + anfangsdatum + "', '" + enddatum + "', Buchungsnr.nextVal, " + kundenid + ", " + wohnungsid + ")";
+
+            rset = stmt.executeQuery(updateQuery);
+
+
+            // KundenID: 110000000
+            // WohnungsID: 100102
 
             stmt.close();																// Verbindung trennen
             conn.commit();

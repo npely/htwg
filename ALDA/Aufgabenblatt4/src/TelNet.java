@@ -81,7 +81,7 @@ public class TelNet {
         StdDraw.setXscale(0, xMax + 1);
         StdDraw.setYscale(0, yMax + 1);
 
-        /*for (int i = 0; i < yMax; i++) {
+        for (int i = 0; i < yMax; i++) {
             StdDraw.line(0.5, i + 0.5, yMax + 0.5, i + 0.5);
         }
         for (int i = 0; i < xMax; i++) {
@@ -89,14 +89,11 @@ public class TelNet {
         }
         StdDraw.line(0.5, yMax + 0.5, xMax + 0.5, yMax + 0.5);
         StdDraw.line(xMax + 0.5, 0.5, xMax + 0.5, yMax + 0.5);
-        StdDraw.setPenColor(StdDraw.RED);*/
-
-        double x = 0.0;
-        double y = 0.0;
+        StdDraw.setPenColor(StdDraw.RED);
 
         for(var v : minTree) {
-            x = v.anfang.x;
-            y = v.ende.y;
+            double x = v.anfang.x;
+            double y = v.ende.y;
             StdDraw.line(v.anfang.x, v.anfang.y, x, y);
             StdDraw.line(x, y, v.ende.x, v.ende.y);
             StdDraw.setPenColor(Color.BLUE);
@@ -124,7 +121,7 @@ public class TelNet {
     }
 
     public static void main(String[] args) {
-        /*TelNet tn = new TelNet(5);
+        TelNet tn = new TelNet(5);
         tn.addTelKnoten(1, 1);
         tn.addTelKnoten(3, 1);
         tn.addTelKnoten(4, 2);
@@ -135,15 +132,15 @@ public class TelNet {
 
         System.out.println(tn.computeOptTelNet());
 
-        tn.drawOptTelNet(7, 7);*/
+        tn.drawOptTelNet(7, 7);
 
-        int max = 1000;
+        /*int max = 1000;
         TelNet tn2 = new TelNet(100);
 
         tn2.generateRandomTelNet(max, max, max);
 
         System.out.println(tn2.computeOptTelNet());
 
-        tn2.drawOptTelNet(max, max);
+        tn2.drawOptTelNet(max, max);*/
     }
 }
