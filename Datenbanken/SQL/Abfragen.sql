@@ -46,18 +46,18 @@ ORDER BY NVL(COUNT(b.BuchungsNR),0) DESC;
 -- Teil 6 --
 
 SELECT f.Name, AVG(bw.Sterne) AS "durchschnittliche Bewertung"
-FROM Bewertung bw
-INNER JOIN Buchung b ON b.BuchungsNR = bw.BuchungsNR
-INNER JOIN Ferienwohnung f ON b.WohnungsID = f.WohnungsID
-INNER JOIN Adresse a ON f.AdressID = a.AdressID
+FROM dbsys13.Bewertung bw
+INNER JOIN dbsys13.Buchung b ON b.BuchungsNR = bw.BuchungsNR
+RIGHT JOIN dbsys13.Ferienwohnung f ON b.WohnungsID = f.WohnungsID
+INNER JOIN dbsys13.Adresse a ON f.AdressID = a.AdressID
 WHERE a.Landname = 'Spanien' AND f.WohnungsID NOT IN 
-    (SELECT f.WohnungsID
-     FROM Buchung b 
-     WHERE b.Anfangsdatum BETWEEN '01/11/2019' AND  '21/11/2019'
-     OR  b.Enddatum BETWEEN '01/11/2019' AND '21/11/2019'
-     OR b.Anfangsdatum < '01/11/2019' AND b.Enddatum > '21/11/2019'
+    (SELECT b.WohnungsID
+     FROM dbsys13.Buchung b 
+     WHERE b.Anfangsdatum BETWEEN '04/06/2020' AND  '07/06/2020'
+     OR  b.Enddatum BETWEEN '04/06/2020' AND '07/06/2020'
+     OR b.Anfangsdatum < '04/06/2020' AND b.Enddatum > '07/06/2020'
     )
-AND f.WohnungsID IN (SELECT fw.WohnungsID FROM FW_HAT_AUS fw WHERE fw.Ausstattungsname = 'Sauna')
+--AND f.WohnungsID IN (SELECT fw.WohnungsID FROM FW_HAT_AUS fw WHERE fw.Ausstattungsname = 'Sauna')
 GROUP BY f.Name
 ORDER BY AVG(bw.Sterne) DESC;
 

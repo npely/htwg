@@ -5,7 +5,7 @@ public class FerienwohnungSQL {
     public static void main(String args[]) {
 
         String name = null;
-        String passwd = "BTSSuga3";
+        String passwd = "kunde";
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         Connection conn = null;
         Statement stmt = null;
@@ -26,7 +26,7 @@ public class FerienwohnungSQL {
 
 
         //System.out.println("Benutzername: ");
-        name = "dbsys13";
+        name = "dbsys63";
         //System.out.println("Passwort: ");
 
         try {
@@ -65,7 +65,7 @@ public class FerienwohnungSQL {
             if (!ausstattung.isEmpty()) {
                 AusstattungView =  "CREATE OR REPLACE VIEW ANZAUS ( WohnungsID, Ausstattungen ) AS " +
                         "SELECT fw.WohnungsID, fw.Ausstattungsname " +
-                        "FROM FW_HAT_AUS fw " +
+                        "FROM dbsys13.FW_HAT_AUS fw " +
                         "WHERE fw.Ausstattungsname = " + "\'" + ausstattung + "\'";
 
                 stmt.executeQuery(AusstattungView);
@@ -76,13 +76,13 @@ public class FerienwohnungSQL {
             }
 
             String mySelectQuery1 = "SELECT f.Name, AVG(bw.Sterne) AS \"durchschnittliche Bewertung\" " +
-                    "FROM Bewertung bw " +
-                    "INNER JOIN Buchung b ON b.BuchungsNR = bw.BuchungsNR " +
-                    "INNER JOIN Ferienwohnung f ON b.WohnungsID = f.WohnungsID " +
-                    "INNER JOIN Adresse a ON f.AdressID = a.AdressID " +
+                    "FROM dbsys13.Bewertung bw " +
+                    "INNER JOIN dbsys13.Buchung b ON b.BuchungsNR = bw.BuchungsNR " +
+                    "RIGHT JOIN dbsys13.Ferienwohnung f ON b.WohnungsID = f.WohnungsID " +
+                    "INNER JOIN dbsys13.Adresse a ON f.AdressID = a.AdressID " +
                     "WHERE a.Landname = " + "\'" + land + "\' " + "AND f.WohnungsID NOT IN " +
-                    "(SELECT f.WohnungsID " +
-                    "FROM Buchung b " +
+                    "(SELECT b.WohnungsID " +
+                    "FROM dbsys13.Buchung b " +
                     "WHERE b.Anfangsdatum BETWEEN" + "\'" + anfangsdatum + "\' " +  "AND" + "\'" + enddatum + "\' " +
                     "OR  b.Enddatum BETWEEN" + "\'" + anfangsdatum + "\' " +  "AND" + "\'" + enddatum + "\' " +
                     "OR b.Anfangsdatum < " + "\'" + anfangsdatum + "\' " + "AND b.Enddatum >" + "\'" + enddatum + "\' " + ") " +
@@ -110,13 +110,6 @@ public class FerienwohnungSQL {
                 enddatum = in.readLine();
                 System.out.println("WohnungsID");
                 wohnungsid = in.readLine();
-
-               /* rset = stmt.executeQuery("SELECT KundenID FROM Kunde");
-                while(rset.next()) {
-                    if (kundenid.equals(rset.getString("KundenID"))) {
-                        neuerKunde = false;
-                    }
-                }*/
             } catch (IOException e) {
                 System.out.println("Fehler beim Lesen der Eingabe: " + e);
                 System.exit(-1);
@@ -125,7 +118,7 @@ public class FerienwohnungSQL {
             String updateQuery = "INSERT INTO Buchung (Datum, Anfangsdatum, Enddatum, Buchungsnr, KundenID, WohnungsID) " +
                     "VALUES (SYSDATE, '" + anfangsdatum + "', '" + enddatum + "', Buchungsnr.nextVal, " + kundenid + ", " + wohnungsid + ")";
 
-            rset = stmt.executeQuery(updateQuery);
+            int x = stmt.executeUpdate(updateQuery);
 
 
             // KundenID: 110000000
