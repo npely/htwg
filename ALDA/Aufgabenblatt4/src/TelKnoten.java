@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class TelKnoten {
     int x;
     int y;
@@ -23,6 +25,10 @@ public class TelKnoten {
 
     @Override
     public int hashCode() {
-        return x * y * 31;
+        return Objects.hash(x, y);
     }
+//    @Override
+//    public int hashCode() {
+//        return x * y * 31;
+//    }
 }
