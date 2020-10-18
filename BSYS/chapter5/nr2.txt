@@ -1,3 +1,19 @@
+
+new program start
+Parent writing to file nr2.txt
+Child writing to file nr2.txt
+new program start
+Parent writing to file nr2.txt
+Child writing to file nr2.txt
+new program start
+Parent writing to file nr2.txt
+Child writing to file nr2.txt
+new program start
+Parent writing to file nr2.txt
+Child writing to file nr2.txt
+new program start
+Parent writing to file nr2.txt
+Child writing to file nr2.txt
 new program start
 Parent writing to file nr2.txt
 Child writing to file nr2.txt

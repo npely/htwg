@@ -9,7 +9,7 @@ CC= gcc -o
 CFLAGS = -g -W -Wall -std=$(STD) -pedantic
 STD= c11
 
-TARGET = nr1 nr2 nr3 nr4
+TARGET = nr1 nr2 nr3 nr4 nr5 nr6
 
 .PHONY: all clean
 
@@ -29,3 +29,9 @@ nr3: nr3.c
 
 nr4: nr4.c
 	$(CC) nr4 nr4.c $(CFLAGS)
+
+nr5: nr5.c
+	$(CC) nr5 nr5.c $(CFLAGS)
+
+nr6: nr6.c
+	$(CC) nr6 nr6.c $(CFLAGS)
