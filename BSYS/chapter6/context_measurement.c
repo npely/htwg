@@ -18,6 +18,27 @@ int comp(const void *p, const void *q)
     return (*(int*) p - *(int*) q);
 }
 
+void showSchedAffinity() {
+    cpu_set_t mask;
+    int nproc = sysconf(_SC_NPROCESSORS_ONLN);
+    sched_getaffinity(0, sizeof(mask), &mask);
+    printf("[%d] sched_getaffinity = ", getpid());
+    for (int i = 0; i < nproc; i++) {
+        printf("%d ", CPU_ISSET(i, &mask));
+    }
+    printf("\n");
+}
+
+void setSchedAffinity() {
+    cpu_set_t set;
+    CPU_ZERO(&set);
+    CPU_SET(0, &set);
+    if(sched_setaffinity(0, sizeof(set), &set)){
+        perror("error setting sched_affinity");
+        _exit(EXIT_FAILURE);
+    }
+}
+
 int main (void)
 {
     struct timespec start, end;
@@ -67,6 +88,8 @@ int main (void)
     }
     else if (rc == 0) //child
     {
+        showSchedAffinity();
+        setSchedAffinity();
         for (int i = 0; i < cycles; ++i) {
             clock_gettime(CLOCK_MONOTONIC_RAW, &start);
             sched_yield(); // divide by 2 ?
@@ -98,6 +121,8 @@ int main (void)
     } else
     {
         //parent:
+        showSchedAffinity();
+        setSchedAffinity();
         for (int i = 0; i < cycles; ++i) {
             sched_yield();
         }
