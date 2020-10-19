@@ -1,7 +1,7 @@
 // Program for measuring the cost of a context switch
 //
 // Author: Niklas Pelz
-// Date: 20.10.2019
+// Date: 16.10.2020
 
 #define _GNU_SOURCE
 #include <sched.h>
@@ -40,12 +40,30 @@ void setSchedAffinity() {
 
 int main (void)
 {
-    struct timespec start, end;
+    struct timespec start, stop;
+    struct timespec startGetTime, stopGetTime;
+    struct timespec startForLoop, stopForLoop;
     int cycles = 10000;
     unsigned long sec[cycles], nsec[cycles];
     const unsigned long bil = 1000000000;
     unsigned long timeTakenByForLoop;
-    struct timespec startForLoop, stopForLoop;
+    unsigned long timeTakenByGetTime, timeTakenByGetTimeNSEC;
+
+    clock_gettime(CLOCK_MONOTONIC_RAW, &startGetTime);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &stopGetTime);
+
+    if (startGetTime.tv_nsec > stopGetTime.tv_nsec)
+        {
+            timeTakenByGetTimeNSEC = (stopGetTime.tv_nsec + bil) - startGetTime.tv_nsec;
+            timeTakenByGetTime = timeTakenByGetTimeNSEC - bil;
+        }
+    else
+        {
+            timeTakenByGetTime = stopGetTime.tv_nsec - startGetTime.tv_nsec;
+        }
+    
+
+    printf("%lu ns\n", timeTakenByGetTime);
 
     if (clock_gettime(CLOCK_MONOTONIC_RAW, &startForLoop) < 0) {
         printf("clock fail\n");
@@ -81,17 +99,17 @@ int main (void)
         for (int i = 0; i < cycles; ++i) {
             clock_gettime(CLOCK_MONOTONIC_RAW, &start);
             sched_yield();
-            clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-            sec[i] = end.tv_sec - start.tv_sec;
+            clock_gettime(CLOCK_MONOTONIC_RAW, &stop);
+            sec[i] = stop.tv_sec - start.tv_sec;
 
-            if (end.tv_nsec < start.tv_nsec)
+            if (stop.tv_nsec < start.tv_nsec)
             {
-                nsec[i] = (end.tv_nsec + bil) - start.tv_nsec;
+                nsec[i] = (stop.tv_nsec + bil) - start.tv_nsec;
                 sec[i] = sec[i] - bil;
             }
             else
             {
-                nsec[i] = end.tv_nsec - start.tv_nsec;
+                nsec[i] = stop.tv_nsec - start.tv_nsec;
             }
         }
 
@@ -106,11 +124,11 @@ int main (void)
         qsort(diff, cycles, sizeof(unsigned long), comp);
 
         //Die Values aufaddieren um sie später wieder durch die Anzahl zu teilen 
-        for (int j = 4000; j < (cycles-4000); ++j) {
+        for (int j = 4000; j < (cycles - 4000); ++j) {
             sum += diff[j];
         }
 
-        printf("The context switch takes %lu ns\n", sum/((cycles - 8000) * 2) - 2 * forLoopTime); //Da zwei Context Switches auf einmal ausgeführt werden
+        printf("The context switch takes %lu ns\n", (sum/((cycles - 8000) * 2) - 2 * forLoopTime) - timeTakenByGetTime); //Da zwei Context Switches auf einmal ausgeführt werden
     } else //Parent
     {
         setSchedAffinity();
