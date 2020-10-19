@@ -12,7 +12,6 @@
 #include <wait.h>
 #include <errno.h>
 
-//Help for qsort
 int comp(const void *p, const void *q)
 {
     return (*(int*) p - *(int*) q);
@@ -45,29 +44,27 @@ int main (void)
     int cycles = 10000;
     unsigned long sec[cycles], nsec[cycles];
     const unsigned long bil = 1000000000;
-
-
-    // for time
     unsigned long timeTakenByForLoop;
-    struct timespec start2, stop2;
-    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start2) < 0) {
+    struct timespec startForLoop, stopForLoop;
+
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &startForLoop) < 0) {
         printf("clock fail\n");
         exit(1);
     }
-    for(int i = 0; i < cycles - 8000; ++i) {}
-    if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop2) < 0) {
+    for(int i = 0; i < cycles; ++i) {}
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &stopForLoop) < 0) {
         printf("clock fail\n");
         exit(1);
     }
-    if (start2.tv_nsec > stop2.tv_nsec)
+    if (startForLoop.tv_nsec > stopForLoop.tv_nsec)
     {
-        timeTakenByForLoop = (((stop2.tv_sec - 1) - start2.tv_sec) * bil) + ((stop2.tv_nsec + bil) - start2.tv_nsec);
+        timeTakenByForLoop = (((stopForLoop.tv_sec - 1) - startForLoop.tv_sec) * bil) + ((stopForLoop.tv_nsec + bil) - startForLoop.tv_nsec);
     }
     else
     {
-        timeTakenByForLoop = (stop2.tv_sec - start2.tv_sec) + (stop2.tv_nsec - start2.tv_nsec);
+        timeTakenByForLoop = (stopForLoop.tv_sec - startForLoop.tv_sec) + (stopForLoop.tv_nsec - startForLoop.tv_nsec);
     }
-    unsigned long for_time = timeTakenByForLoop / (cycles - 200);
+    unsigned long forLoopTime = timeTakenByForLoop / (cycles);
 
 
     int rc = fork();
@@ -80,21 +77,22 @@ int main (void)
         _exit(EXIT_FAILURE);
     }
 
-    //fork failed
     if (rc < 0)
     {
         fprintf(stderr, "fork failed\n");
         return 1;
     }
-    else if (rc == 0) //child
+    else if (rc == 0) //Child
     {
         showSchedAffinity();
         setSchedAffinity();
+
         for (int i = 0; i < cycles; ++i) {
             clock_gettime(CLOCK_MONOTONIC_RAW, &start);
-            sched_yield(); // divide by 2 ?
+            sched_yield();
             clock_gettime(CLOCK_MONOTONIC_RAW, &end);
             sec[i] = end.tv_sec - start.tv_sec;
+
             if (end.tv_nsec < start.tv_nsec)
             {
                 nsec[i] = (end.tv_nsec + bil) - start.tv_nsec;
@@ -105,27 +103,32 @@ int main (void)
                 nsec[i] = end.tv_nsec - start.tv_nsec;
             }
         }
+
         unsigned long diff[cycles];
         unsigned long sum = 0;
+
         for(int i = 0; i < cycles; ++i) {
             diff[i] = sec[i] * bil + nsec[i];
-            // diff[i] = diff[i] ; //two switches
         }
-        //sort diff array
+
+        //Sortieren des Arrays
         qsort(diff, cycles, sizeof(unsigned long), comp);
-        //add all together
+
+        //Die Values aufaddieren um sie später wieder durch die Anzahl zu teilen 
         for (int j = 4000; j < (cycles-4000); ++j) {
             sum += diff[j];
         }
-        printf("The context switch takes %lu ns\n", sum/((cycles - 8000) * 2) - 2*for_time); //two context switches at once
-    } else
+
+        printf("The context switch takes %lu ns\n", sum/((cycles - 8000) * 2) - 2 * forLoopTime); //Da zwei Context Switches auf einmal ausgeführt werden
+    } else //Parent
     {
-        //parent:
         showSchedAffinity();
         setSchedAffinity();
+
         for (int i = 0; i < cycles; ++i) {
             sched_yield();
         }
+
         wait(NULL);
     }
     exit(0);
