@@ -75,8 +75,8 @@ int main (void)
     }
     else if (rc == 0) //Child
     {
-        showSchedAffinity();
         setSchedAffinity();
+        showSchedAffinity();
 
         for (int i = 0; i < cycles; ++i) {
             clock_gettime(CLOCK_MONOTONIC_RAW, &start);
@@ -113,8 +113,8 @@ int main (void)
         printf("The context switch takes %lu ns\n", sum/((cycles - 8000) * 2) - 2 * forLoopTime); //Da zwei Context Switches auf einmal ausgeführt werden
     } else //Parent
     {
-        showSchedAffinity();
         setSchedAffinity();
+        showSchedAffinity();
 
         for (int i = 0; i < cycles; ++i) {
             sched_yield();
