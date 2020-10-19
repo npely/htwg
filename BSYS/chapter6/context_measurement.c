@@ -67,16 +67,7 @@ int main (void)
     }
     unsigned long forLoopTime = timeTakenByForLoop / (cycles);
 
-
     int rc = fork();
-
-    cpu_set_t set;
-    CPU_ZERO(&set);
-    CPU_SET(0, &set);
-    if(sched_setaffinity(0, sizeof(set), &set)){
-        perror("error setting sched_affinity");
-        _exit(EXIT_FAILURE);
-    }
 
     if (rc < 0)
     {
