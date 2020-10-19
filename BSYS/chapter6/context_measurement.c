@@ -52,14 +52,11 @@ int main (void)
     int rc = fork();
 
     cpu_set_t set;
-
     CPU_ZERO(&set);
     CPU_SET(0, &set);
-
-    int setaff = sched_setaffinity(0, sizeof(set),(const cpu_set_t *) &set);
-    if (setaff < 0) { //Error
-        fprintf(stderr, "setaffinity failed with error %d\n", errno);
-        return -1;
+    if(sched_setaffinity(0, sizeof(set), &set)){
+        perror("error setting sched_affinity");
+        _exit(EXIT_FAILURE);
     }
 
     //fork failed
