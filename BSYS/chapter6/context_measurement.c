@@ -21,7 +21,7 @@ int comp(const void *p, const void *q)
 void setSchedAffinity() {
     cpu_set_t set;
     CPU_ZERO(&set);
-    CPU_SET(0, &set);
+    CPU_SET(3, &set);
     if(sched_setaffinity(0, sizeof(set), &set)){
          perror("error setting sched_affinity");
          _exit(EXIT_FAILURE);
@@ -33,7 +33,7 @@ int main (void)
     struct timespec start, stop;
     struct timespec startGetTime, stopGetTime;
     struct timespec startForLoop, stopForLoop;
-    int cycles = 10000;
+    int cycles = 100000;
     unsigned long sec[cycles], nsec[cycles];
     const unsigned long bil = 1000000000;
     unsigned long timeTakenByForLoop;
