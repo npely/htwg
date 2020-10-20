@@ -9,7 +9,7 @@ TARGET = system_measurement context_measurement
 all: $(TARGET)
 
 clean:
-	$(RM) $(TARGET) $(TARGET).o
+	rm $(TARGET) $(TARGET).o
 
 system_measurement: system_measurement.c
 	$(CC) system_measurement system_measurement.c $(CFLAGS)

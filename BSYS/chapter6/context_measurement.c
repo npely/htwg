@@ -10,22 +10,12 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <wait.h>
+#include <fcntl.h>
 #include <errno.h>
 
 int comp(const void *p, const void *q)
 {
     return (*(int*) p - *(int*) q);
-}
-
-void showSchedAffinity() {
-    cpu_set_t mask;
-    int nproc = sysconf(_SC_NPROCESSORS_ONLN);
-    sched_getaffinity(0, sizeof(mask), &mask);
-    printf("[%d] sched_getaffinity = ", getpid());
-    for (int i = 0; i < nproc; i++) {
-        printf("%d ", CPU_ISSET(i, &mask));
-    }
-    printf("\n");
 }
 
 void setSchedAffinity() {
@@ -47,24 +37,8 @@ int main (void)
     unsigned long sec[cycles], nsec[cycles];
     const unsigned long bil = 1000000000;
     unsigned long timeTakenByForLoop;
-    unsigned long timeTakenByGetTime, timeTakenByGetTimeNSEC;
-
-    clock_gettime(CLOCK_MONOTONIC_RAW, &startGetTime);
-    clock_gettime(CLOCK_MONOTONIC_RAW, &stopGetTime);
-
-    if (startGetTime.tv_nsec > stopGetTime.tv_nsec)
-        {
-            timeTakenByGetTimeNSEC = (stopGetTime.tv_nsec + bil) - startGetTime.tv_nsec;
-            timeTakenByGetTime = timeTakenByGetTimeNSEC - bil;
-        }
-    else
-        {
-            timeTakenByGetTime = stopGetTime.tv_nsec - startGetTime.tv_nsec;
-        }
+    unsigned long timeTakenByGetTime[cycles], timeTakenByGetTimeNSEC[cycles];
     
-
-    printf("%lu ns\n", timeTakenByGetTime);
-
     if (clock_gettime(CLOCK_MONOTONIC_RAW, &startForLoop) < 0) {
         printf("clock fail\n");
         exit(1);
@@ -94,7 +68,6 @@ int main (void)
     else if (rc == 0) //Child
     {
         setSchedAffinity();
-        showSchedAffinity();
 
         for (int i = 0; i < cycles; ++i) {
             clock_gettime(CLOCK_MONOTONIC_RAW, &start);
@@ -102,7 +75,7 @@ int main (void)
             clock_gettime(CLOCK_MONOTONIC_RAW, &stop);
             sec[i] = stop.tv_sec - start.tv_sec;
 
-            if (stop.tv_nsec < start.tv_nsec)
+            if (start.tv_nsec > stop.tv_nsec)
             {
                 nsec[i] = (stop.tv_nsec + bil) - start.tv_nsec;
                 sec[i] = sec[i] - bil;
@@ -111,13 +84,26 @@ int main (void)
             {
                 nsec[i] = stop.tv_nsec - start.tv_nsec;
             }
+
+            clock_gettime(CLOCK_MONOTONIC_RAW, &startGetTime);
+            clock_gettime(CLOCK_MONOTONIC_RAW, &stopGetTime);
+
+            if (startGetTime.tv_nsec > stopGetTime.tv_nsec)
+            {
+                timeTakenByGetTimeNSEC[i] = (stopGetTime.tv_nsec + bil) - startGetTime.tv_nsec;
+                timeTakenByGetTime[i] = timeTakenByGetTimeNSEC[i] - bil;
+            }
+            else
+            {
+                timeTakenByGetTime[i] = stopGetTime.tv_nsec - startGetTime.tv_nsec;
+            }
         }
 
         unsigned long diff[cycles];
         unsigned long sum = 0;
 
         for(int i = 0; i < cycles; ++i) {
-            diff[i] = sec[i] * bil + nsec[i];
+            diff[i] = (sec[i] * bil + nsec[i]) - timeTakenByGetTime[i];
         }
 
         //Sortieren des Arrays
@@ -128,11 +114,12 @@ int main (void)
             sum += diff[j];
         }
 
-        printf("The context switch takes %lu ns\n", (sum/((cycles - 8000) * 2) - 2 * forLoopTime) - timeTakenByGetTime); //Da zwei Context Switches auf einmal ausgeführt werden
+        unsigned long finalValue = (sum/((cycles - 8000) * 2) - forLoopTime * 2);
+
+        printf("The context switch takes %lu ns\n", finalValue); //Da zwei Context Switches auf einmal ausgeführt werden
     } else //Parent
     {
         setSchedAffinity();
-        showSchedAffinity();
 
         for (int i = 0; i < cycles; ++i) {
             sched_yield();
