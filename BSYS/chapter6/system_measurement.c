@@ -1,87 +1,73 @@
-// Program for measuring the cost of a system call
+// // Program for measuring the cost of a system call
+// //
+// // Author: Niklas Pelz
+// // Date: 13.10.2019
 //
-// Author: Niklas Pelz
-// Date: 13.10.2019
-
-//The value 199309L or greater additionally exposes definitions for POSIX.1b (real-time extensions).
 #define _POSIX_C_SOURCE 199309L
-#include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <time.h>
-#include <fcntl.h>
 
-#define BILLION 1000000000L
 
-int main(void)
-{
+int main (void) {
+
     struct timespec start, stop;
-    long sysresultstart = 0;
-    long sysresultstop = 0;
-    long loopresultstart = 0;
-    long loopresultstop = 0;
-    long sysresult = 0;
-    long loopresult = 0;
-    size_t cycles = 100;
-    long result = 0;
-    //clockid_t clk_id;
-    //clk_id = CLOCK_REALTIME;
-    //char c;
-    //int fd = open("./test.txt", O_RDONLY);
-    //clock_getres
-    
-    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start) == -1)
-    {
-        fprintf(stderr, "start of measurement failed\n");
+    const int cycles = 1000000;
+    const unsigned long bil = 1000000000;
+    unsigned long timeTakenBySysCall;
+    unsigned long timeTakenByForLoop;
+
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start) < 0) {
+        printf("clock fail\n");
         exit(1);
     }
 
-    for (size_t i = 0; i < cycles; i++)
-    {
+    for (int i = 0; i < cycles; ++i) {
         getpid();
     }
 
-    if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop) == -1)
-    {
-        fprintf(stderr, "stopping the measurement failed\n");
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop) < 0) {
+        printf("clock fail\n");
         exit(1);
     }
 
-    sysresultstart = (start.tv_sec * BILLION) + start.tv_nsec;
-    sysresultstop = (stop.tv_sec * BILLION) + stop.tv_nsec;
+    struct timespec start2, stop2;
 
-    sysresult = sysresultstop - sysresultstart; 
-
-    sysresult = sysresult / cycles;
-
-
-    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start) == -1)
-    {
-        fprintf(stderr, "start of measurement failed\n");
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start2) < 0) {
+        printf("clock fail\n");
         exit(1);
     }
 
-    for (size_t i = 0; i < cycles; i++)
+    for(int j = 0; j < cycles; ++j)
     {
+
     }
 
-    if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop) == -1)
-    {
-        fprintf(stderr, "stopping the measurement failed\n");
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &stop2) < 0) {
+        printf("clock fail\n");
         exit(1);
     }
 
-    loopresultstart = (start.tv_sec * BILLION) + start.tv_nsec;
-    loopresultstop = (stop.tv_sec * BILLION) + stop.tv_nsec;
+    if (start.tv_nsec > stop.tv_nsec)
+    {
+        timeTakenBySysCall = (((stop.tv_sec - 1) - start.tv_sec) * bil) + ((stop.tv_nsec + bil) - start.tv_nsec);
+    }
+    else
+    {
+        timeTakenBySysCall = (stop.tv_sec - start.tv_sec) + (stop.tv_nsec - start.tv_nsec);
+    }
 
-    loopresult = loopresultstop - loopresultstart;
+    if (start2.tv_nsec > stop2.tv_nsec)
+    {
+        timeTakenByForLoop = (((stop2.tv_sec - 1) - start2.tv_sec) * bil) + ((stop2.tv_nsec + bil) - start2.tv_nsec);
+    }
+    else
+    {
+        timeTakenByForLoop = (stop2.tv_sec - start2.tv_sec) + (stop2.tv_nsec - start2.tv_nsec);
+    }
 
-    loopresult = loopresult / cycles;
-
-    result = sysresult - loopresult;
-
-    printf("%ld\n", result);
-
+    unsigned long time = (timeTakenBySysCall / cycles) - (timeTakenByForLoop / cycles);
+    printf( "The system call takes %ld ns\n", time);
     return 0;
-    
 }

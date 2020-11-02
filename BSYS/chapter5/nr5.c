@@ -27,8 +27,8 @@ int main(void)
 
     else
     {
-        sleep(10);
-        printf("goodbye, I am the parent (pid:%d)\n", getpid());
+        int rc_wait = wait(NULL);
+        printf("goodbye, I am the parent (pid:%d) (rc_wait:%d)\n", getpid(), rc_wait);
     }
 
     return 0;

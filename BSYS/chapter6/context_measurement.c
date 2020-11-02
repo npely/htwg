@@ -1,78 +1,131 @@
-#define _POSIX_C_SOURCE 199309L
+// Program for measuring the cost of a context switch
+//
+// Author: Niklas Pelz
+// Date: 16.10.2020
+
 #define _GNU_SOURCE
-#include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <fcntl.h>
 #include <sched.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <wait.h>
+#include <fcntl.h>
+#include <errno.h>
 
-#define BILLION 1000000000L
+int comp(const void *p, const void *q)
+{
+    return (*(int*) p - *(int*) q);
+}
 
-int main(void)
+void setSchedAffinity() {
+    cpu_set_t set;
+    CPU_ZERO(&set);
+    CPU_SET(3, &set);
+    if(sched_setaffinity(0, sizeof(set), &set)){
+         perror("error setting sched_affinity");
+         _exit(EXIT_FAILURE);
+    }
+}
+
+int main (void)
 {
     struct timespec start, stop;
-
-    int pipefd1[2];
-    int pipefd2[2];
-    pid_t cpid;
-
-    long currentTimeStart;
-    long currentTimeStop;
-    long currentTime;
-
-    cpu_set_t process;
-    int length = sizeof(process);
-    CPU_ZERO(&process);
-	CPU_SET(2, &process);
-
-    pipe(pipefd1);
-    pipe(pipefd2);
-
-    cpid = fork();
-
-    if (cpid == -1)
-    {
-        fprintf(stderr, "fork failed");
+    struct timespec startGetTime, stopGetTime;
+    struct timespec startForLoop, stopForLoop;
+    int cycles = 100000;
+    unsigned long sec[cycles], nsec[cycles];
+    const unsigned long bil = 1000000000;
+    unsigned long timeTakenByForLoop;
+    unsigned long timeTakenByGetTime[cycles], timeTakenByGetTimeNSEC[cycles];
+    
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &startForLoop) < 0) {
+        printf("clock fail\n");
         exit(1);
     }
-
-
-    if ((sched_setaffinity(getpid(), length, &process)) < 1)
-    {   
-        
-        if (cpid == 0)
-        {
-            //closing write from fd2
-            close(pipefd2[1]);
-            //closing read from fd1
-            close(pipefd1[0]);
-
-            clock_gettime(CLOCK_MONOTONIC_RAW, &stop);  //stop1
-                write(pipefd1[1], NULL, 1);
-            clock_gettime(CLOCK_MONOTONIC_RAW, &start); //start2
-            
-            read(pipefd2[0], currentTime, sizeof(long) * 2);
-
-            //closing read
-            close(pipefd1[0]);
-
-            exit(1);
-        }
-        else
-        {
-            //closing read
-            close(pipefd2[0]);//close pipe2 read
-            close(pipefd1[1]);//close pipe1 write
-
-            clock_gettime(CLOCK_MONOTONIC_RAW, &start); //start1
-                read(pipefd1[0], NULL, sizeof(long) * 2);
-            clock_gettime(CLOCK_MONOTONIC_RAW, &stop); //stop2
-            
-        }
-
-        printf("test2 %ldns\n", currentTime);
+    for(int i = 0; i < cycles; ++i) {}
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &stopForLoop) < 0) {
+        printf("clock fail\n");
+        exit(1);
     }
-    return 0;
+    if (startForLoop.tv_nsec > stopForLoop.tv_nsec)
+    {
+        timeTakenByForLoop = (((stopForLoop.tv_sec - 1) - startForLoop.tv_sec) * bil) + ((stopForLoop.tv_nsec + bil) - startForLoop.tv_nsec);
+    }
+    else
+    {
+        timeTakenByForLoop = (stopForLoop.tv_sec - startForLoop.tv_sec) + (stopForLoop.tv_nsec - startForLoop.tv_nsec);
+    }
+    unsigned long forLoopTime = timeTakenByForLoop / (cycles);
+
+    int rc = fork();
+
+    if (rc < 0)
+    {
+        fprintf(stderr, "fork failed\n");
+        return 1;
+    }
+    else if (rc == 0) //Child
+    {
+        setSchedAffinity();
+
+        for (int i = 0; i < cycles; ++i) {
+            clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+            sched_yield();
+            clock_gettime(CLOCK_MONOTONIC_RAW, &stop);
+            sec[i] = stop.tv_sec - start.tv_sec;
+
+            if (start.tv_nsec > stop.tv_nsec)
+            {
+                nsec[i] = (stop.tv_nsec + bil) - start.tv_nsec;
+                sec[i] = sec[i] - bil;
+            }
+            else
+            {
+                nsec[i] = stop.tv_nsec - start.tv_nsec;
+            }
+
+            clock_gettime(CLOCK_MONOTONIC_RAW, &startGetTime);
+            clock_gettime(CLOCK_MONOTONIC_RAW, &stopGetTime);
+
+            if (startGetTime.tv_nsec > stopGetTime.tv_nsec)
+            {
+                timeTakenByGetTimeNSEC[i] = (stopGetTime.tv_nsec + bil) - startGetTime.tv_nsec;
+                timeTakenByGetTime[i] = timeTakenByGetTimeNSEC[i] - bil;
+            }
+            else
+            {
+                timeTakenByGetTime[i] = stopGetTime.tv_nsec - startGetTime.tv_nsec;
+            }
+        }
+
+        unsigned long diff[cycles];
+        unsigned long sum = 0;
+
+        for(int i = 0; i < cycles; ++i) {
+            diff[i] = (sec[i] * bil + nsec[i]) - timeTakenByGetTime[i];
+        }
+
+        //Sortieren des Arrays
+        qsort(diff, cycles, sizeof(unsigned long), comp);
+
+        //Die Values aufaddieren um sie später wieder durch die Anzahl zu teilen 
+        for (int j = 4000; j < (cycles - 4000); ++j) {
+            sum += diff[j];
+        }
+
+        unsigned long finalValue = (sum/((cycles - 8000) * 2) - forLoopTime * 2);
+
+        printf("The context switch takes %lu ns\n", finalValue); //Da zwei Context Switches auf einmal ausgeführt werden
+    } else //Parent
+    {
+        setSchedAffinity();
+
+        for (int i = 0; i < cycles; ++i) {
+            sched_yield();
+        }
+
+        wait(NULL);
+    }
+    exit(0);
 }

@@ -19,11 +19,11 @@ int main(void)
 
     else if (rc == 0)
     {
-    //char* execv_args[] = { "/bin/ls", "-l", NULL};
-    //execv(execv_args[0], execv_args);
+    char* execv_args[] = { "/bin/ls", "-l", NULL};
+    execv(execv_args[0], execv_args);
 
-    char* execvp_args[] = { "ls", "-l", NULL};
-    execvp(execvp_args[0], execvp_args);
+    //char* execvp_args[] = { "ls", "-l", NULL};
+    //execvp(execvp_args[0], execvp_args);
     }
 
     else
