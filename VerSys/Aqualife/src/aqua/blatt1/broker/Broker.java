@@ -96,6 +96,9 @@ public class Broker {
 
                 if (msg.getPayload() instanceof HandoffRequest)
                     brokerTask.handoffFish(msg);
+
+                if (msg.getPayload() instanceof PoisonPill)
+                    Broker.this.stopRequested = true;
             });
         }
     }
