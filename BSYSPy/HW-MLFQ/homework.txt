@@ -1,0 +1,22 @@
+2)
+1: python ./mlfq.py -l 0,200,0 -n 3 -q 10
+2: python ./mlfq.py -l 0,180,0:100,20,0 -n 3 -q 10
+3: python ./mlfq.py -l 0,180,0:50,20,1 -n 3 -q 10 -S
+4: python ./mlfq.py -j 3 -n 3 -q 10 -m 200 -l 0,200,0:100,50,1:100,50,1 -c -S -i 1
+5: python ./mlfq.py -j 3 -n 3 -q 10 -m 200 -l 0,200,0:100,50,1:100,50,1 -c -S -i 1
+5 (with Boost): python .\mlfq-2.py --jlist 0,200,0:100,30,3:100,30,3 -q 10 -i 3 -S -B 50 -c
+6: python ./mlfq.py -j 3 -n 3 -q 10 -m 200 -l 0,200,0:75,90,9 -c -S -i 1
+6 (with gaming tolerance): python ./mlfq.py -j 3 -n 3 -q 10 -m 200 -l 0,200,0:75,90,9 -c -i 1
+7: python ./mlfq.py -j 3 -n 3 -Q 10,20,40 -m 200 -l 0,120,0:0,120,0 -c -a 2
+
+3)
+Nur eine Queue, dann laufen alle Jobs in einem Round Robin Verfahren.
+
+4)
+python ./mlfq.py -l 0,200,0:0,100,9 -n 3 -q 10 -i 1 -S -c
+
+5)
+alle 200ms
+
+6)
+./mlfq.py --jlist 0,15,5:0,15,5 -c -i 0 -S -I
