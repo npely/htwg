@@ -10,56 +10,61 @@ import messaging.Endpoint;
 import messaging.Message;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Broker {
     Endpoint endpoint = new Endpoint(4711);
     ClientCollection<InetSocketAddress> clientCollection = new ClientCollection();
     int indexCounter = 0;
+    ExecutorService executor = Executors.newFixedThreadPool(6);
 
-    public void broker() {
-        while (true) {
-            Message msg = endpoint.blockingReceive();
+    public class BrokerTask {
+        public void register(Message message)  {
+            InetSocketAddress sender = message.getSender();
+            String tankId = "tank" + ++indexCounter;
+            clientCollection.add(tankId, sender);
+            endpoint.send(sender, new RegisterResponse(tankId));
+        }
 
-            if (msg.getPayload() instanceof RegisterRequest)
-                register(msg);
+        public void deregister(Message message) {
+            DeregisterRequest deregisterRequest = (DeregisterRequest) message.getPayload();
+            String tankId = deregisterRequest.getId();
+            int tankIndex = clientCollection.indexOf(tankId);
+            clientCollection.remove(tankIndex);
+        }
 
-            if (msg.getPayload() instanceof DeregisterRequest)
-                deregister(msg);
+        public void handoffFish(Message message) {
+            HandoffRequest handoffRequest = (HandoffRequest) message.getPayload();
+            InetSocketAddress receiver;
+            FishModel fish = handoffRequest.getFish();
+            int fishTankIndex = clientCollection.indexOf(message.getSender());
 
-            if (msg.getPayload() instanceof HandoffRequest)
-                handoffFish(msg);
+            if (fish.getDirection() == Direction.LEFT)
+                receiver = clientCollection.getLeftNeighborOf(fishTankIndex);
+            else
+                receiver = clientCollection.getRightNeighborOf(fishTankIndex);
 
+            endpoint.send(receiver, handoffRequest);
         }
     }
 
-    public void register(Message message)  {
-        RegisterRequest registerRequest = (RegisterRequest) message.getPayload();
-        InetSocketAddress sender = message.getSender();
-        String tankId = "tank" + indexCounter++;
-        clientCollection.add(tankId, sender);
-        endpoint.send(sender, new RegisterResponse(tankId));
-    }
+    public void broker() {
+        while (true) {
+            executor.execute(() -> {
+                BrokerTask brokerTask = new BrokerTask();
+                Message msg = endpoint.blockingReceive();
 
-    public void deregister(Message message) {
-        DeregisterRequest deregisterRequest = (DeregisterRequest) message.getPayload();
-        String tankId = deregisterRequest.getId();
-        int tankIndex = clientCollection.indexOf(tankId);
-        clientCollection.remove(tankIndex);
-        indexCounter--;
-    }
+                if (msg.getPayload() instanceof RegisterRequest)
+                    brokerTask.register(msg);
 
-    public void handoffFish(Message message) {
-        HandoffRequest handoffRequest = (HandoffRequest) message.getPayload();
-        InetSocketAddress receiver;
-        FishModel fish = handoffRequest.getFish();
-        int fishTankIndex = clientCollection.indexOf(message.getSender());
+                if (msg.getPayload() instanceof DeregisterRequest)
+                    brokerTask.deregister(msg);
 
-        if (fish.getDirection() == Direction.LEFT)
-            receiver = clientCollection.getLeftNeighborOf(fishTankIndex);
-        else
-            receiver = clientCollection.getRightNeighborOf(fishTankIndex);
-
-        endpoint.send(receiver, handoffRequest);
+                if (msg.getPayload() instanceof HandoffRequest)
+                    brokerTask.handoffFish(msg);
+            });
+        }
     }
 
     public static void main(String[] args) {
