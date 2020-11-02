@@ -1,0 +1,53 @@
+Rechnernetze LAbor Wireshark:
+
+3:
+1)
+UDP, TCP, RTCP, STUN, TLSv1.2
+2)
+0.028857000 seconds
+3)
+Internet-Adresse meines Rechners: 192.168.1.2
+Ethernet-Adresse: 34:3B:FE:9C:6C:4B
+Ziel-MAC-Adresse: 04:a1:51:d4:70:d7 (Router)
+4)
+[Protocols in Frame: eth:ethertye:ip:tcp:http]
+TCP (Transmission Control Protocol) / transport Layer
+IP (Internet Protocol) / network layer
+Ethernet II / physical layer
+
+5:
+1)
+tcp.port == 80
+2)
+Nein, da über Port 80 auch andere Nachrichten geschickt werden.
+3)
+Es wird nur http Verkehr angezeeigt, der nicht über UDP Port 1900 läuft.
+4)
+ip.dst == 192.168.1.2
+
+6:
+1)
+Insgesamt: 163 Pakete.
+Dabei einmal Upstream 8 Pakete auf die Downstream 8 Pakete kamen.
+Einmal Upstream 35 Pakete auf die Downstream 112 Pakete kamen.
+2)
+Upstream: 6716 Bytes
+Downstream: 168468 Bytes
+3)
+1? 128.65.210.184
+4)
+2. Einmal 61659 und 61660
+
+7:
+Bandbreite Upload = 4763 Bits/s
+Bandbreite Download = 137k Bits/s
+
+Paketgröße Upload = 54 Bytes
+Paketgröße Download = 1337 Bytes
+
+Insgesamte Zeit die es lief = 12,7 Sekunden
+Anzahl angekommener Pakete = 305
+12,7 / 305 = 0,041 Sekunden (Time difference between displayed frames)
+
+Die Pakete die verschickt werden sind immer gleich groß und besitzen auch im Durchschnitt den selben Abstand.
+
