@@ -1,0 +1,10 @@
+2)
+Es ist nicht unmöglich, jedoch ist die Wahrscheinlichkeit so gering, da es auf 101 Zahlen immer nur zwei Möglichkeiten gibt.
+In Fällen wie diesen beansrpucht der Job mit den vielen Tickets die komplette CPU, egal wie lange beide laufen müssen.
+
+3)
+In diesem Fall ist der Scheduler ziemlich fair, da die Wahrscheinlichkeit die meiste Zeit bei 50/50 liegt.
+
+4)
+Umso größer das Zeitquantum wird, umso unfairer wird auch der Scheduler. Wenn das Zeitquantum am Ende bei den gesamten
+100ms des Jobs liegt beansprucht dieser eine Job der zufällig ausgewählt wurde, wieder die gesamte CPU bis er fertig ist.

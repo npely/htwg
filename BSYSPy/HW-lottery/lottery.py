@@ -17,15 +17,15 @@ parser.add_option('-c', '--compute', help='compute answers for me', action='stor
 
 random.seed(options.seed)
 
-print 'ARG jlist', options.jlist
-print 'ARG jobs', options.jobs
-print 'ARG maxlen', options.maxlen
-print 'ARG maxticket', options.maxticket
-print 'ARG quantum', options.quantum
-print 'ARG seed', options.seed
-print ''
+print('ARG jlist', options.jlist)
+print('ARG jobs', options.jobs)
+print('ARG maxlen', options.maxlen)
+print('ARG maxticket', options.maxticket)
+print('ARG quantum', options.quantum)
+print('ARG seed', options.seed)
+print('')
 
-print 'Here is the job list, with the run time of each job: '
+print('Here is the job list, with the run time of each job: ')
 
 import operator
 
@@ -44,7 +44,7 @@ if options.jlist == '':
         runTotal += runtime
         tickTotal += tickets
         joblist.append([jobnum, runtime, tickets])
-        print '  Job %d ( length = %d, tickets = %d )' % (jobnum, runtime, tickets)
+        print ('  Job %d ( length = %d, tickets = %d )' % (jobnum, runtime, tickets))
 else:
     jobnum = 0
     for entry in options.jlist.split(','):
@@ -54,17 +54,17 @@ else:
         tickTotal += int(tickets)
         jobnum += 1
     for job in joblist:
-        print '  Job %d ( length = %d, tickets = %d )' % (job[0], job[1], job[2])
-print '\n'
+        print ('  Job %d ( length = %d, tickets = %d )' % (job[0], job[1], job[2]))
+print ('\n')
 
 if options.solve == False:
-    print 'Here is the set of random numbers you will need (at most):'
+    print ('Here is the set of random numbers you will need (at most):')
     for i in range(runTotal):
         r = int(random.random() * 1000001)
-        print 'Random', r
+        print ('Random', r)
 
 if options.solve == True:
-    print '** Solutions **\n'
+    print ('** Solutions **\n')
 
     jobs  = len(joblist)
     clock = 0
@@ -79,10 +79,10 @@ if options.solve == True:
                 (wjob, wrun, wtix) = (job, runtime, tickets)
                 break
 
-        print 'Random', r, '-> Winning ticket %d (of %d) -> Run %d' % (winner, tickTotal, wjob)
+        print ('Random', r, '-> Winning ticket %d (of %d) -> Run %d' % (winner, tickTotal, wjob))
         # print 'Winning ticket %d (of %d) -> Run %d' % (winner, tickTotal, wjob)
 
-        print '  Jobs:',
+        print ('  Jobs:',)
         for (job, runtime, tickets) in joblist:
             if wjob == job:
                 wstr = '*'
@@ -93,8 +93,8 @@ if options.solve == True:
                 tstr = tickets
             else:
                 tstr = '---'
-            print ' (%s job:%d timeleft:%d tix:%s ) ' % (wstr, job, runtime, tstr), 
-        print ''
+            print (' (%s job:%d timeleft:%d tix:%s ) ' % (wstr, job, runtime, tstr), )
+        print ('')
 
         # now do the accounting
         if wrun >= options.quantum:
@@ -106,7 +106,7 @@ if options.solve == True:
 
         # job completed!
         if wrun == 0:
-            print '--> JOB %d DONE at time %d' % (wjob, clock)
+            print ('--> JOB %d DONE at time %d' % (wjob, clock))
             tickTotal -= wtix
             wtix = 0
             jobs -= 1
@@ -115,7 +115,7 @@ if options.solve == True:
         joblist[wjob] = (wjob, wrun, wtix)
 
         if jobs == 0:
-            print ''
+            print ('')
             break
 
 
