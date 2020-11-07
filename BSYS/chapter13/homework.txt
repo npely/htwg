@@ -1,0 +1,155 @@
+4)
+
+niklas@npelys-maschine:~$ free --mega
+              total        used        free      shared  buff/cache   available
+Mem:           8098        1432        1735         241        4930        6198
+Swap:          2147           0        2147
+
+niklas@npelys-maschine:~$ free --mega (während ./memory-user 50)
+              total        used        free      shared  buff/cache   available
+Mem:           8098        1478        1685         245        4934        6148
+Swap:          2147           0        2147
+
+niklas@npelys-maschine:~$ free --mega (nach dem Stopp von ./memory-user 50)
+              total        used        free      shared  buff/cache   available
+Mem:           8098        1429        1736         243        4932        6199
+Swap:          2147           0        2147
+
+niklas@npelys-maschine:~$ free --mega (während ./memory-user 5000)
+              total        used        free      shared  buff/cache   available
+Mem:           8098        2589         575         243        4933        5038
+Swap:          2147           0        2147
+
+niklas@npelys-maschine:~$ free --mega (nach dem Stopp von ./memory-user 5000)
+              total        used        free      shared  buff/cache   available
+Mem:           8098        1386        5149         232        1562        6175
+Swap:          2147          21        2125
+
+niklas@npelys-maschine:~$ free --mega (während dem Erneuten laufen lassen von ./memory-user 5000)
+              total        used        free      shared  buff/cache   available
+Mem:           8098        6400         126         232        1571        1164
+Swap:          2147          21        2125
+
+niklas@npelys-maschine:~$ free --mega (während ./memory-user 8000)
+              total        used        free      shared  buff/cache   available
+Mem:           8098        7712         143         143         242          54
+Swap:          2147        1806         341
+
+niklas@npelys-maschine:~$ free --mega (nach dem Stopp von ./memory-user 8000)
+              total        used        free      shared  buff/cache   available
+Mem:           8098         490        7260         138         347        7229
+Swap:          2147        1043        1103
+
+7)
+
+13998:   bash
+         Address Perm   Offset Device    Inode  Size  Rss  Pss Referenced Anonymous LazyFree ShmemPmdMapped FilePmdMapped Shared_Hugetlb Private_Hugetlb Swap SwapPss Locked THPeligible Mapping
+    56012c6e1000 r--p 00000000 103:02  5636099   180    0    0          0         0        0              0             0              0               0    0       0      0           0 bash
+    56012c70e000 r-xp 0002d000 103:02  5636099   708  636  336        636         0        0              0             0              0               0    0       0      0           0 bash
+    56012c7bf000 r--p 000de000 103:02  5636099   220  124   72        124         0        0              0             0              0               0    0       0      0           0 bash
+    56012c7f6000 r--p 00114000 103:02  5636099    16    4    4          4         4        0              0             0              0               0   12      12      0           0 bash
+    56012c7fa000 rw-p 00118000 103:02  5636099    36   28   28         28        28        0              0             0              0               0    8       8      0           0 bash
+    56012c803000 rw-p 00000000  00:00        0    40   28   28         28        28        0              0             0              0               0    0       0      0           0 
+    56012e34c000 rw-p 00000000  00:00        0  1532  412  412        412       412        0              0             0              0               0  996     996      0           0 [heap]
+    7fead672d000 r--p 00000000 103:02 14419277    12    0    0          0         0        0              0             0              0               0    0       0      0           0 libnss_files-2.31.so
+    7fead6730000 r-xp 00003000 103:02 14419277    28    0    0          0         0        0              0             0              0               0    0       0      0           0 libnss_files-2.31.so
+    7fead6737000 r--p 0000a000 103:02 14419277     8    0    0          0         0        0              0             0              0               0    0       0      0           0 libnss_files-2.31.so
+    7fead6739000 r--p 0000b000 103:02 14419277     4    0    0          0         0        0              0             0              0               0    4       4      0           0 libnss_files-2.31.so
+    7fead673a000 rw-p 0000c000 103:02 14419277     4    0    0          0         0        0              0             0              0               0    4       4      0           0 libnss_files-2.31.so
+    7fead673b000 rw-p 00000000  00:00        0    24    0    0          0         0        0              0             0              0               0    0       0      0           0 
+    7fead6757000 r--p 00000000 103:02  5773402  5904   64   10         64         0        0              0             0              0               0    0       0      0           0 locale-archive
+    7fead6d1b000 rw-p 00000000  00:00        0    12    4    4          4         4        0              0             0              0               0    4       4      0           0 
+    7fead6d1e000 r--p 00000000 103:02 14419269   148    0    0          0         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7fead6d43000 r-xp 00025000 103:02 14419269  1504  288    2        288         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7fead6ebb000 r--p 0019d000 103:02 14419269   296   56    1         56         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7fead6f05000 ---p 001e7000 103:02 14419269     4    0    0          0         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7fead6f06000 r--p 001e7000 103:02 14419269    12    4    4          4         4        0              0             0              0               0    8       8      0           0 libc-2.31.so
+    7fead6f09000 rw-p 001ea000 103:02 14419269    12   12   12         12        12        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7fead6f0c000 rw-p 00000000  00:00        0    16   12   12         12        12        0              0             0              0               0    4       4      0           0 
+    7fead6f10000 r--p 00000000 103:02 14419270     4    0    0          0         0        0              0             0              0               0    0       0      0           0 libdl-2.31.so
+    7fead6f11000 r-xp 00001000 103:02 14419270     8    0    0          0         0        0              0             0              0               0    0       0      0           0 libdl-2.31.so
+    7fead6f13000 r--p 00003000 103:02 14419270     4    0    0          0         0        0              0             0              0               0    0       0      0           0 libdl-2.31.so
+    7fead6f14000 r--p 00003000 103:02 14419270     4    0    0          0         0        0              0             0              0               0    4       4      0           0 libdl-2.31.so
+    7fead6f15000 rw-p 00004000 103:02 14419270     4    0    0          0         0        0              0             0              0               0    4       4      0           0 libdl-2.31.so
+    7fead6f16000 r--p 00000000 103:02 14423144    56    0    0          0         0        0              0             0              0               0    0       0      0           0 libtinfo.so.6.2
+    7fead6f24000 r-xp 0000e000 103:02 14423144    60   60   30         60         0        0              0             0              0               0    0       0      0           0 libtinfo.so.6.2
+    7fead6f33000 r--p 0001d000 103:02 14423144    56   44   44         44         0        0              0             0              0               0    0       0      0           0 libtinfo.so.6.2
+    7fead6f41000 r--p 0002a000 103:02 14423144    16    4    4          4         4        0              0             0              0               0   12      12      0           0 libtinfo.so.6.2
+    7fead6f45000 rw-p 0002e000 103:02 14423144     4    4    4          4         4        0              0             0              0               0    0       0      0           0 libtinfo.so.6.2
+    7fead6f46000 rw-p 00000000  00:00        0     8    0    0          0         0        0              0             0              0               0    8       8      0           0 
+    7fead6f57000 r--s 00000000 103:02  6166300    28    0    0          0         0        0              0             0              0               0    0       0      0           0 gconv-modules.cache
+    7fead6f5e000 r--p 00000000 103:02 14419265     4    0    0          0         0        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7fead6f5f000 r-xp 00001000 103:02 14419265   140    4    0          4         0        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7fead6f82000 r--p 00024000 103:02 14419265    32    0    0          0         0        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7fead6f8b000 r--p 0002c000 103:02 14419265     4    0    0          0         0        0              0             0              0               0    4       4      0           0 ld-2.31.so
+    7fead6f8c000 rw-p 0002d000 103:02 14419265     4    4    4          4         4        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7fead6f8d000 rw-p 00000000  00:00        0     4    0    0          0         0        0              0             0              0               0    4       4      0           0 
+    7fff5e51c000 rw-p 00000000  00:00        0   132   20   20         20        20        0              0             0              0               0   92      92      0           0 [stack]
+    7fff5e54b000 r--p 00000000  00:00        0    12    0    0          0         0        0              0             0              0               0    0       0      0           0 [vvar]
+    7fff5e54e000 r-xp 00000000  00:00        0     4    4    0          4         0        0              0             0              0               0    0       0      0           0 [vdso]
+ffffffffff600000 --xp 00000000  00:00        0     4    0    0          0         0        0              0             0              0               0    0       0      0           0 [vsyscall]
+                                               ===== ==== ==== ========== ========= ======== ============== ============= ============== =============== ==== ======= ====== =========== 
+                                               11312 1816 1031       1816       536        0              0             0              0               0 1168    1168      0           0 KB 
+
+
+8)
+
+14880:   ./memory-user 50
+         Address Perm   Offset Device    Inode  Size   Rss   Pss Referenced Anonymous LazyFree ShmemPmdMapped FilePmdMapped Shared_Hugetlb Private_Hugetlb Swap SwapPss Locked THPeligible Mapping
+    557ea05dc000 r--p 00000000 103:02 11800346     4     4     4          4         0        0              0             0              0               0    0       0      0           0 memory-user
+    557ea05dd000 r-xp 00001000 103:02 11800346     4     4     4          4         0        0              0             0              0               0    0       0      0           0 memory-user
+    557ea05de000 r--p 00002000 103:02 11800346     4     4     4          4         0        0              0             0              0               0    0       0      0           0 memory-user
+    557ea05df000 r--p 00002000 103:02 11800346     4     4     4          4         4        0              0             0              0               0    0       0      0           0 memory-user
+    557ea05e0000 rw-p 00003000 103:02 11800346     4     4     4          4         4        0              0             0              0               0    0       0      0           0 memory-user
+    557ea0b43000 rw-p 00000000  00:00        0   132     4     4          4         4        0              0             0              0               0    0       0      0           0 [heap]
+    7f91a6a37000 rw-p 00000000  00:00        0 48832 48832 48832      48832     48832        0              0             0              0               0    0       0      0           0 
+    7f91a99e7000 r--p 00000000 103:02 14419269   148   144    15        144         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f91a9a0c000 r-xp 00025000 103:02 14419269  1504   860    47        860         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f91a9b84000 r--p 0019d000 103:02 14419269   296   144     5        144         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f91a9bce000 ---p 001e7000 103:02 14419269     4     0     0          0         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f91a9bcf000 r--p 001e7000 103:02 14419269    12    12    12         12        12        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f91a9bd2000 rw-p 001ea000 103:02 14419269    12    12    12         12        12        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f91a9bd5000 rw-p 00000000  00:00        0    24    24    24         24        24        0              0             0              0               0    0       0      0           0 
+    7f91a9bf1000 r--p 00000000 103:02 14419265     4     4     0          4         0        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f91a9bf2000 r-xp 00001000 103:02 14419265   140   140     8        140         0        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f91a9c15000 r--p 00024000 103:02 14419265    32    32     1         32         0        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f91a9c1e000 r--p 0002c000 103:02 14419265     4     4     4          4         4        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f91a9c1f000 rw-p 0002d000 103:02 14419265     4     4     4          4         4        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f91a9c20000 rw-p 00000000  00:00        0     4     4     4          4         4        0              0             0              0               0    0       0      0           0 
+    7fffca96c000 rw-p 00000000  00:00        0   132    12    12         12        12        0              0             0              0               0    0       0      0           0 [stack]
+    7fffca9e5000 r--p 00000000  00:00        0    12     0     0          0         0        0              0             0              0               0    0       0      0           0 [vvar]
+    7fffca9e8000 r-xp 00000000  00:00        0     4     4     0          4         0        0              0             0              0               0    0       0      0           0 [vdso]
+ffffffffff600000 --xp 00000000  00:00        0     4     0     0          0         0        0              0             0              0               0    0       0      0           0 [vsyscall]
+                                               ===== ===== ===== ========== ========= ======== ============== ============= ============== =============== ==== ======= ====== =========== 
+                                               51324 50256 49004      50256     48916        0              0             0              0               0    0       0      0           0 KB 
+
+
+14451:   ./memory-user 5000
+         Address Perm   Offset Device    Inode    Size     Rss     Pss Referenced Anonymous LazyFree ShmemPmdMapped FilePmdMapped Shared_Hugetlb Private_Hugetlb Swap SwapPss Locked THPeligible Mapping
+    55db0c074000 r--p 00000000 103:02 11800346       4       4       4          4         0        0              0             0              0               0    0       0      0           0 memory-user
+    55db0c075000 r-xp 00001000 103:02 11800346       4       4       4          4         0        0              0             0              0               0    0       0      0           0 memory-user
+    55db0c076000 r--p 00002000 103:02 11800346       4       4       4          4         0        0              0             0              0               0    0       0      0           0 memory-user
+    55db0c077000 r--p 00002000 103:02 11800346       4       4       4          4         4        0              0             0              0               0    0       0      0           0 memory-user
+    55db0c078000 rw-p 00003000 103:02 11800346       4       4       4          4         4        0              0             0              0               0    0       0      0           0 memory-user
+    55db0d285000 rw-p 00000000  00:00        0     132       4       4          4         4        0              0             0              0               0    0       0      0           0 [heap]
+    7f2e94589000 rw-p 00000000  00:00        0 4882816 4882816 4882816    4882816   4882816        0              0             0              0               0    0       0      0           0 
+    7f2fbe5e9000 r--p 00000000 103:02 14419269     148     144      52        144         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f2fbe60e000 r-xp 00025000 103:02 14419269    1504     832     101        832         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f2fbe786000 r--p 0019d000 103:02 14419269     296     140       9        140         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f2fbe7d0000 ---p 001e7000 103:02 14419269       4       0       0          0         0        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f2fbe7d1000 r--p 001e7000 103:02 14419269      12      12      12         12        12        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f2fbe7d4000 rw-p 001ea000 103:02 14419269      12      12      12         12        12        0              0             0              0               0    0       0      0           0 libc-2.31.so
+    7f2fbe7d7000 rw-p 00000000  00:00        0      24      24      24         24        24        0              0             0              0               0    0       0      0           0 
+    7f2fbe7f3000 r--p 00000000 103:02 14419265       4       4       2          4         0        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f2fbe7f4000 r-xp 00001000 103:02 14419265     140     140      16        140         0        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f2fbe817000 r--p 00024000 103:02 14419265      32      32       3         32         0        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f2fbe820000 r--p 0002c000 103:02 14419265       4       4       4          4         4        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f2fbe821000 rw-p 0002d000 103:02 14419265       4       4       4          4         4        0              0             0              0               0    0       0      0           0 ld-2.31.so
+    7f2fbe822000 rw-p 00000000  00:00        0       4       4       4          4         4        0              0             0              0               0    0       0      0           0 
+    7fff92cf0000 rw-p 00000000  00:00        0     132      16      16         16        16        0              0             0              0               0    0       0      0           0 [stack]
+    7fff92deb000 r--p 00000000  00:00        0      12       0       0          0         0        0              0             0              0               0    0       0      0           0 [vvar]
+    7fff92dee000 r-xp 00000000  00:00        0       4       4       0          4         0        0              0             0              0               0    0       0      0           0 [vdso]
+ffffffffff600000 --xp 00000000  00:00        0       4       0       0          0         0        0              0             0              0               0    0       0      0           0 [vsyscall]
+                                               ======= ======= ======= ========== ========= ======== ============== ============= ============== =============== ==== ======= ====== =========== 
+                                               4885308 4884212 4883099    4884212   4882904        0              0             0              0               0    0       0      0           0 KB 
+
