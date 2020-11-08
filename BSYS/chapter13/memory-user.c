@@ -13,8 +13,7 @@ int main(int argc, char *argv[]) {
 
         c_array = (char*) malloc(sizeof(char) * expectedMegaBytesInBytes);
 
-        // 0 is the same as NULL
-        if (c_array == 0) {
+        if (c_array == NULL) {
             printf("malloc of size %lu failed!\n", expectedMegaBytesInBytes);
             exit(-1);
         }
