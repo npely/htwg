@@ -42,6 +42,8 @@ Swap:          2147        1043        1103
 
 7)
 
+shared memory Bereich!
+
 13998:   bash
          Address Perm   Offset Device    Inode  Size  Rss  Pss Referenced Anonymous LazyFree ShmemPmdMapped FilePmdMapped Shared_Hugetlb Private_Hugetlb Swap SwapPss Locked THPeligible Mapping
     56012c6e1000 r--p 00000000 103:02  5636099   180    0    0          0         0        0              0             0              0               0    0       0      0           0 bash
