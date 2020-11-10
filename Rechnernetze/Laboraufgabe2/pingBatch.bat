@@ -1,0 +1,1 @@
+for %%a IN (1,32,64,96,128) DO (ping -l %%a -n 100 en.snu.ac.kr | findstr Mittelwert >> test.txt)

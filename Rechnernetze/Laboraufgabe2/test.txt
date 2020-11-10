@@ -1,0 +1,5 @@
+1:      Minimum = 14ms, Maximum = 39ms, Mittelwert = 16ms
+32:     Minimum = 14ms, Maximum = 38ms, Mittelwert = 17ms
+64:     Minimum = 14ms, Maximum = 31ms, Mittelwert = 16ms
+96:     Minimum = 13ms, Maximum = 87ms, Mittelwert = 19ms
+128:    Minimum = 14ms, Maximum = 45ms, Mittelwert = 17ms

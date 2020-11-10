@@ -23,11 +23,26 @@ public class Broker {
     ExecutorService executor = Executors.newFixedThreadPool(6);
     boolean stopRequested = false;
 
-    public class BrokerTask {
+    public class BrokerTask implements Runnable {
         private ReadWriteLock lock;
+        Message message;
 
-        public BrokerTask() {
+        public BrokerTask(Message message) {
             this.lock = new ReentrantReadWriteLock();
+            this.message = message;
+        }
+
+        @Override
+        public void run() {
+            var payload = message.getPayload();
+            if (payload instanceof RegisterRequest)
+                register(message);
+            if (payload instanceof DeregisterRequest)
+                deregister(message);
+            if (payload instanceof HandoffRequest)
+                handoffFish(message);
+            if (payload instanceof PoisonPill)
+                stopRequested = true;
         }
 
         public void register(Message message)  {
@@ -85,21 +100,8 @@ public class Broker {
 
         while (!stopRequested) {
             Message msg = endpoint.blockingReceive();
-            executor.execute(() -> {
-                BrokerTask brokerTask = new BrokerTask();
-
-                if (msg.getPayload() instanceof RegisterRequest)
-                    brokerTask.register(msg);
-
-                if (msg.getPayload() instanceof DeregisterRequest)
-                    brokerTask.deregister(msg);
-
-                if (msg.getPayload() instanceof HandoffRequest)
-                    brokerTask.handoffFish(msg);
-
-                if (msg.getPayload() instanceof PoisonPill)
-                    Broker.this.stopRequested = true;
-            });
+            var brokerTask = new BrokerTask(msg);
+            executor.execute(brokerTask);
         }
     }
 
