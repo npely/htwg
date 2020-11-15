@@ -2,10 +2,7 @@ package aqua.blatt1.broker;
 import aqua.blatt1.client.ClientCommunicator;
 import aqua.blatt1.common.Direction;
 import aqua.blatt1.common.FishModel;
-import aqua.blatt1.common.msgtypes.DeregisterRequest;
-import aqua.blatt1.common.msgtypes.HandoffRequest;
-import aqua.blatt1.common.msgtypes.RegisterRequest;
-import aqua.blatt1.common.msgtypes.RegisterResponse;
+import aqua.blatt1.common.msgtypes.*;
 import messaging.Endpoint;
 import messaging.Message;
 
@@ -51,6 +48,17 @@ public class Broker {
             lock.writeLock().lock();
             clientCollection.add(tankId, sender);
             lock.writeLock().unlock();
+
+            InetSocketAddress leftNeighbor = clientCollection.getLeftNeighborOf(clientCollection.indexOf(sender));
+            InetSocketAddress rightNeighbor = clientCollection.getRightNeighborOf(clientCollection.indexOf(sender));
+
+            NeighborUpdate senderNeighborUpdate = new NeighborUpdate(tankId, leftNeighbor, rightNeighbor);
+            NeighborUpdate leftNeighborUpdate = new NeighborUpdate("left", clientCollection.getLeftNeighborOf(clientCollection.indexOf(leftNeighbor)), sender);
+            NeighborUpdate rightNeighborUpdate = new NeighborUpdate("right", sender, clientCollection.getRightNeighborOf(clientCollection.indexOf(rightNeighbor)));
+
+            endpoint.send(sender, senderNeighborUpdate);
+            endpoint.send(leftNeighbor, leftNeighborUpdate);
+            endpoint.send(rightNeighbor, rightNeighborUpdate);
             endpoint.send(sender, new RegisterResponse(tankId));
         }
 
@@ -60,9 +68,19 @@ public class Broker {
             lock.readLock().lock();
             int tankIndex = clientCollection.indexOf(tankId);
             lock.readLock().unlock();
+
+            InetSocketAddress leftNeighbor = clientCollection.getLeftNeighborOf(clientCollection.indexOf(tankId));
+            InetSocketAddress rightNeighbor = clientCollection.getRightNeighborOf(clientCollection.indexOf(tankId));
+
+            NeighborUpdate leftNeighborUpdate = new NeighborUpdate("left", clientCollection.getLeftNeighborOf(clientCollection.indexOf(leftNeighbor)), rightNeighbor);
+            NeighborUpdate rightNeighborUpdate = new NeighborUpdate("right", leftNeighbor, clientCollection.getRightNeighborOf(clientCollection.indexOf(rightNeighbor)));
+
             lock.writeLock().lock();
             clientCollection.remove(tankIndex);
             lock.writeLock().unlock();
+
+            endpoint.send(leftNeighbor, leftNeighborUpdate);
+            endpoint.send(rightNeighbor, rightNeighborUpdate);
         }
 
         public void handoffFish(Message message) {
