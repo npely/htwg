@@ -120,3 +120,8 @@ Jedoch meldet Valgrind den Memory Loss der 10 allocierten Bytes.
 
 free(): invalid pointer
 Aborted (core dumped)
+
+8)
+
+Linked List ist relativ einfach zu handhaben, Zugriff vorne und hinten. Zugriff in der Mitte schwierig.
+Vektor ist gut für zufällige Lesezugriffe und das Hinzufügen + Löschen am Ende.
