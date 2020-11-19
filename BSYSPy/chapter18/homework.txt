@@ -1,0 +1,80 @@
+1)
+
+page table size = address space / page size
+
+Wenn der Address space wächst steigt die Anzahl der Pages innerhalb des Spaces
+
+Wenn die Page Size wächst gibt es insgesamt weniger Pages, die Pages an sich sind jedoch größer
+
+Es würde zu viel von dem Speicher verschwenden.
+
+2)
+
+PS C:\Users\pelzn\htwg\BSYSPy\chapter18> python .\paging-linear-translate.py -P 1k -a 16k -p 32k -v -u 25   
+ARG seed 0
+ARG address space size 16k
+ARG phys mem size 32k
+ARG page size 1k
+ARG verbose True
+ARG addresses -1
+
+
+The format of the page table is simple:
+The high-order (left-most) bit is the VALID bit.
+  If the bit is 1, the rest of the entry is the PFN.
+  If the bit is 0, the page is not valid.
+Use verbose mode (-v) if you want to print the VPN # by
+each entry of the page table.
+
+Page Table (from entry 0 down to the max size)
+
+  [      10]  0x80000013
+
+Virtual Address Trace
+
+  VA 0x00002bc6 (decimal:    11206) --> valid (VPN = 10) -> 11206 mod 1024 = 10 R: 966 -> 13 (hex) = 19 (dez) -> 19 * 1024 + 966 = 20422
+
+
+Prinzip ganz simpel: Schauen ob die Page überhaupt valid ist -> Wenn Nein, dann kann auch nichts dort ausgelesen werden.
+                                                             -> Wenn Ja, dann die Adresse in Dezimal umrechnen und Modulo der Page Größe (bei 1k also 1024).
+                                                                So erhält man die Page Number der Virtuellen Adresse. Dann schaut man
+
+ 
+Umso mehr Pages allociert sind umso mehr virtuelle Adressen sind auch valide.
+
+3)
+
+-P 8 -a 32 -p 1024 -v -s 1 = extrem kleiner physischer Speicher
+
+-P 8k -a 32k -p 1m -v -s 2 = die Pages sind im Vergleich zur allgemeinen Größe des Address Spaces extrem groß. 4 Pages passen rein.
+
+-P 1m -a 256m -p 512m -v -s 3 = der Address Space ist extrem groß, die Hälfte vom physischen Speicher.
+
+4)
+
+$ python ./paging-linear-translate.py -a 65k -v -c
+ARG address space size 65k
+ARG phys mem size 64k
+Error: physical memory size must be GREATER than address space size (for this simulation)
+
+$ python ./paging-linear-translate.py -a 0 -v -c
+ARG address space size 0
+Error: must specify a non-zero address-space size.
+
+$  python ./paging-linear-translate.py -p 0 -v -c
+ARG phys mem size 0
+Error: must specify a non-zero physical memory size.
+
+$ python ./paging-linear-translate.py -P 0 -v -c
+Traceback (most recent call last):
+File "./paging-linear-translate.py", line 85, in <module>
+    mustbemultipleof(asize, pagesize, 'address space must be a multiple of the pagesize')
+File "./paging-linear-translate.py", line 14, in mustbemultipleof
+    if (int(float(bignum)/float(num)) != (int(bignum) / int(num))):
+ZeroDivisionError: float division by zero
+
+$ python ./paging-linear-translate.py -P 32k -v -c
+Traceback (most recent call last):
+File "./paging-linear-translate.py", line 174, in <module>
+    if pt[vpn] < 0:
+IndexError: array index out of range

@@ -1,0 +1,93 @@
+1)
+
+segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 0
+
+ARG seed 0
+ARG address space size 128
+ARG phys mem size 512
+
+Segment register information:
+
+  Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+  Segment 0 limit                  : 20
+
+  Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+  Segment 1 limit                  : 20
+
+Virtual Address Trace
+  VA  0: 0x0000006c (decimal:  108) --> VALID in SEG1: 0x000001ec (decimal:  492)
+  VA  1: 0x00000061 (decimal:   97) --> SEGMENTATION VIOLATION (SEG1)
+  VA  2: 0x00000035 (decimal:   53) --> SEGMENTATION VIOLATION (SEG0)
+  VA  3: 0x00000021 (decimal:   33) --> SEGMENTATION VIOLATION (SEG0)
+  VA  4: 0x00000041 (decimal:   65) --> SEGMENTATION VIOLATION (SEG1)
+
+segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 1
+
+ARG seed 1
+ARG address space size 128
+ARG phys mem size 512
+
+Segment register information:
+
+  Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+  Segment 0 limit                  : 20
+
+  Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+  Segment 1 limit                  : 20
+
+Virtual Address Trace
+  VA  0: 0x00000011 (decimal:   17) --> VALID in SEG0: 0x00000011 (decimal:   17)
+  VA  1: 0x0000006c (decimal:  108) --> VALID in SEG1: 0x000001ec (decimal:  492)
+  VA  2: 0x00000061 (decimal:   97) --> SEGMENTATION VIOLATION (SEG1)
+  VA  3: 0x00000020 (decimal:   32) --> SEGMENTATION VIOLATION (SEG0)
+  VA  4: 0x0000003f (decimal:   63) --> SEGMENTATION VIOLATION (SEG0)
+
+segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 2
+
+ARG seed 2
+ARG address space size 128
+ARG phys mem size 512
+
+Segment register information:
+
+  Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+  Segment 0 limit                  : 20
+
+  Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+  Segment 1 limit                  : 20
+
+Virtual Address Trace
+  VA  0: 0x0000007a (decimal:  122) --> VALID in SEG1: 0x000001fa (decimal:  506)
+  VA  1: 0x00000079 (decimal:  121) --> VALID in SEG1: 0x000001f9 (decimal:  505)
+  VA  2: 0x00000007 (decimal:    7) --> VALID in SEG0: 0x00000007 (decimal:    7)
+  VA  3: 0x0000000a (decimal:   10) --> VALID in SEG0: 0x0000000a (decimal:   10)
+  VA  4: 0x0000006a (decimal:  106) --> SEGMENTATION VIOLATION (SEG1)
+
+2)
+
+Highest in Segment 0 = decimal: 19 -> 0x00000013
+
+Lowest in Segment 1 = decimal: 108 -> 0x0000006c
+
+Segment 0: 0-19
+Segment 1: 492-511
+
+./segmentation.py -a 128 -p 512 -b 0 -l 20 -B 512 -L 20 -s 1 -A 19,108,20,107 -c
+
+3)
+
+./segmentation.py -a 16 -p 128 -A 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 --b0 0 --l0 2 --b1 16 --l1 2 -c
+
+Die ersten zwei müssen valid sein, deswegen von 0 bis 2
+
+Für die letzten zwei ist es genau andersherum, da das Segment negativ wächst
+
+4)
+
+Das Limit ist hierbei entscheidend.
+Limit = Adress Space * 0.9
+
+5)
+
+-l 0 -L 0
+

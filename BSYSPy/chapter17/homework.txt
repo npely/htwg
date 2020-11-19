@@ -1,0 +1,43 @@
+1)
+
+Sobald genug kleine Blöcke vorhanden sind wird der letzte Block quasi nicht mehr angefasst. Liegt vorallem an der BEST Fit Policy.
+
+2)
+
+Bei der WORST Fit Policy wächst die Liste mit fast jeder Allocation, da der letzte Listeneintrag um einiges größer ist als der Rest.
+
+3)
+
+Die Anzahl an "searched Elements" geht runter.
+
+4)
+
+Macht es einen Unterschied? Bei BEST und WORST muss es ja trotzdem einmal die gesamte Liste durchlaufen.
+Für FIRST Fit ist es natürlich am praktischsten wenn die Liste immer so sortiert ist das das größte Element vorne steht.
+
+5)
+
+BEST (ohne coalescing): Free List Size = 31, viele -1 | BEST (mit coalescing): Free List Size = 1, kein einziges -1 | hierbei macht die Ordering keinen Unterschied
+
+WORST (ohne coalescing): Free List Size = 100, gegen Ende fast nurnoch -1 | WORST (mit coalescing): Free List Size = 1, kein einziges -1 | hierbei macht Ordering keinen Unterschied
+
+FIRST (ohne coalescing): Free List Size = 51, auch viele -1 | FREE (mit coalescing): Free List Size = 1, kein einziges -1 | SIZESORT+ ist nicht so performant und effizient wie ADDRSORT, SIZESORT- ist ganz schlimm, schlimmer als ADDRSORT ohne coalescing
+
+Größere Allocations returnen -1, da die gesplitteten Teile zu klein für die meisten Allocations sind.
+
+6)
+
+50% ist genau wie die eigentliche Simulation
+
+0% wird die ganze Zeit gefreed und nie etwas allocated, das heißt die Free List wächst, aber langsam
+
+100% der Speicher ist ziemlich schnell verbraucht und es wird nurnoch -1 returned.
+
+7)
+
+-A +value (zu allocierender Value)
+-A -value (zu freender pointer)
+
+
+
+
