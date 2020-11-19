@@ -49,6 +49,10 @@ public class Broker {
             clientCollection.add(tankId, sender);
             lock.writeLock().unlock();
 
+            if (clientCollection.size() == 1) {
+                endpoint.send(sender, new Token());
+            }
+
             InetSocketAddress leftNeighbor = clientCollection.getLeftNeighborOf(clientCollection.indexOf(sender));
             InetSocketAddress rightNeighbor = clientCollection.getRightNeighborOf(clientCollection.indexOf(sender));
 
