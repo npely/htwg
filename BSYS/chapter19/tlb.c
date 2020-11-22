@@ -78,7 +78,21 @@ int main(int argc, char *argv[]) {
 
         printf("Accessing %lu pages takes %lu ns\n", num_pages, final_value);
 
+        FILE* fptr;
+
+        fptr = fopen("tlb.csv", "a+");
+
+        if (fptr == NULL) {
+            printf("Error with File Pointer");
+            exit(1);
+        }
+
+        fprintf(fptr, "%ld, %ld\n", num_pages, final_value);
+
         free(array);
+
+        fflush(fptr);
+        fclose(fptr);
         exit(0);
     }
 }
