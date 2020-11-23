@@ -8,8 +8,12 @@ if [[ "$2" == "" ]]; then
     exit 1
 fi
 
+rm tlb.csv
+
 for (( i = 1; i <= $1; i += 1))
 do
     ./tlb $i $2
     wait
 done
+
+python ./plot.py

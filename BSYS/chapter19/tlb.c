@@ -18,6 +18,11 @@ void setSchedAffinity() {
     }
 }
 
+int comp(const void *p, const void *q)
+{
+    return (*(int*) p - *(int*) q);
+}
+
 int main(int argc, char *argv[]) {
     if (argc < 3) {
         fprintf(stderr, "You need to put in the numbr of pages and number of iterations\n");
@@ -49,10 +54,16 @@ int main(int argc, char *argv[]) {
 
         const unsigned long bil = 1000000000;
 
-        long total_access_time = 0;
+        unsigned long access_time[iterations];
+        unsigned long total_access_time = 0;
 
         // calloc um sich die Initialisierung des Arrays zu sparen
         int* array = (int*) calloc(num_pages * jump, sizeof(int));
+
+        if (array == NULL) {
+            fprintf(stderr, "Error allocating memory!");
+            return -1;
+        }
 
         // Loop zur Messung der Dauer des Speicherzugriffes
         // ----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -71,10 +82,17 @@ int main(int argc, char *argv[]) {
                 pages_total_time += (pages_access_time_stop_nano - pages_access_time_start_nano) - (clock_overhead_stop_nano - pages_access_time_start_nano);
             }
 
-            total_access_time += pages_total_time / num_pages;
+            access_time[i] = pages_total_time / num_pages;
         }
         // ------------------------------------------------------------------------------------------------------------------------------------------------------
-        unsigned long final_value = total_access_time / iterations;
+        // Array sortieren
+        qsort(access_time, iterations, sizeof(unsigned long), comp);
+
+        for (int i = iterations * 0.1; i < (iterations * 0.7); ++i) {
+            total_access_time += access_time[i];
+        }
+
+        unsigned long final_value = total_access_time / iterations * 0.6;
 
         printf("Accessing %lu pages takes %lu ns\n", num_pages, final_value);
 
@@ -83,8 +101,8 @@ int main(int argc, char *argv[]) {
         fptr = fopen("tlb.csv", "a+");
 
         if (fptr == NULL) {
-            printf("Error with File Pointer");
-            exit(1);
+            fprintf(stderr, "Error with File Pointer");
+            return -1;
         }
 
         fprintf(fptr, "%ld, %ld\n", num_pages, final_value);
@@ -93,6 +111,7 @@ int main(int argc, char *argv[]) {
 
         fflush(fptr);
         fclose(fptr);
-        exit(0);
+        
+        return 0;
     }
 }

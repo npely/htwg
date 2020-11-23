@@ -7,4 +7,7 @@ data = np.genfromtxt("tlb.csv", delimiter=",", names=["x", "y"])
 
 plt.plot(data["x"], data["y"])
 
+plt.xlabel("Number of Pages")
+plt.ylabel("Time in ns")
+
 plt.show()
