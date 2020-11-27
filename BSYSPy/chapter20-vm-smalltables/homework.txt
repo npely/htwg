@@ -1,0 +1,18 @@
+2)
+
+PDBR = 108
+
+VA: 611c 32kb
+
+VA in BIN: 
+
+110 00 = 24 --> a1 = 1 | 010 0001 = 33
+
+01 000 = 8 (in Page 33) --> b5 = 1 | 011 0101 = 53
+
+Offset = 1 1100 = 28
+
+physikalische Adresse = 011 0101 1 1100 = 0x6bc
+
+Wert an der physikalischen Adresse = 08 = 8
+
