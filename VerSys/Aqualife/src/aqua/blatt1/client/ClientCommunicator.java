@@ -2,12 +2,20 @@ package aqua.blatt1.client;
 
 import java.net.InetSocketAddress;
 
-import aqua.blatt1.common.Direction;
-import aqua.blatt1.common.msgtypes.*;
 import messaging.Endpoint;
 import messaging.Message;
+import aqua.blatt1.client.TankModel.RecordingMode;
+import aqua.blatt1.common.Direction;
 import aqua.blatt1.common.FishModel;
 import aqua.blatt1.common.Properties;
+import aqua.blatt1.common.msgtypes.CollectSnapshot;
+import aqua.blatt1.common.msgtypes.DeregisterRequest;
+import aqua.blatt1.common.msgtypes.HandoffRequest;
+import aqua.blatt1.common.msgtypes.NeighborUpdate;
+import aqua.blatt1.common.msgtypes.RegisterRequest;
+import aqua.blatt1.common.msgtypes.RegisterResponse;
+import aqua.blatt1.common.msgtypes.SnapshotMarker;
+import aqua.blatt1.common.msgtypes.Token;
 
 public class ClientCommunicator {
 	private final Endpoint endpoint;
@@ -31,20 +39,23 @@ public class ClientCommunicator {
 			endpoint.send(broker, new DeregisterRequest(id));
 		}
 
+		public void forwardToken(InetSocketAddress addr) {
+			endpoint.send(addr, new Token());
+		}
+
+		public void sendSnapshotMarker(InetSocketAddress addr) {
+			endpoint.send(addr, new SnapshotMarker());
+		}
+
+		public void sendSnapshotCollectionMarker(InetSocketAddress addr, CollectSnapshot cs) {
+			endpoint.send(addr, cs);
+		}
+
 		public void handOff(FishModel fish, TankModel tankModel) {
-			if (fish.getDirection() == Direction.LEFT) {
-				endpoint.send(tankModel.getLeftNeighbor(), new HandoffRequest(fish));
-			} else {
-				endpoint.send(tankModel.getRightNeighbor(), new HandoffRequest(fish));
-			}
-		}
-
-		public void sendToken(InetSocketAddress leftNeighbor, Token token) {
-			endpoint.send(leftNeighbor, token);
-		}
-
-		public void sendMark(InetSocketAddress neighbor, SnapshotMarker mark) {
-			endpoint.send(neighbor, mark);
+			if (fish.getDirection() == Direction.LEFT)
+				endpoint.send(tankModel.leftNeighbor, new HandoffRequest(fish));
+			else
+				endpoint.send(tankModel.rightNeighbor, new HandoffRequest(fish));
 		}
 	}
 
@@ -66,18 +77,39 @@ public class ClientCommunicator {
 				if (msg.getPayload() instanceof HandoffRequest)
 					tankModel.receiveFish(((HandoffRequest) msg.getPayload()).getFish());
 
+				if (msg.getPayload() instanceof Token)
+					tankModel.receiveToken();
+
 				if (msg.getPayload() instanceof NeighborUpdate) {
-					tankModel.setLeftNeighbor(((NeighborUpdate) msg.getPayload()).getLeftNeighbor());
-					tankModel.setRightNeighbor(((NeighborUpdate) msg.getPayload()).getRightNeighbor());
+					NeighborUpdate neighborUpdate = (NeighborUpdate) msg.getPayload();
+					if (neighborUpdate.getLeftNeighbor() != null)
+						tankModel.leftNeighbor = neighborUpdate.getLeftNeighbor();
+					if (neighborUpdate.getRightNeighbor() != null)
+						tankModel.rightNeighbor = neighborUpdate.getRightNeighbor();
 				}
-
-				if (msg.getPayload() instanceof Token) {
-					tankModel.receiveToken((Token) msg.getPayload());
-				}
-
 				if (msg.getPayload() instanceof SnapshotMarker) {
-					tankModel.initiateSnapshot();
+					if (msg.getSender().equals(tankModel.leftNeighbor))
+						tankModel.handleReceivedMarker("left");
+
+					else
+						tankModel.handleReceivedMarker("right");
 				}
+
+				if (msg.getPayload() instanceof CollectSnapshot) {
+					tankModel.hasSnapshotCollectToken = true;
+					tankModel.snapshotCollector = (CollectSnapshot) msg.getPayload();
+					if (tankModel.isInitiator) {
+						tankModel.isSnapshotDone = true;
+						tankModel.hasSnapshotCollectToken = false;
+						tankModel.isInitiator = false;
+					} else {
+						tankModel.hasSnapshotCollectToken = false;
+						tankModel.snapshotCollector.addFishies(tankModel.localState);
+						tankModel.forwarder.sendSnapshotCollectionMarker(tankModel.leftNeighbor, tankModel.snapshotCollector);
+					}
+				}
+
+
 			}
 			System.out.println("Receiver stopped.");
 		}
@@ -92,3 +124,4 @@ public class ClientCommunicator {
 	}
 
 }
+
