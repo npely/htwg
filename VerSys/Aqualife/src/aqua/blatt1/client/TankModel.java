@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import aqua.blatt1.common.Direction;
 import aqua.blatt1.common.FishModel;
+import aqua.blatt1.common.msgtypes.SnapshotMarker;
 import aqua.blatt1.common.msgtypes.Token;
 
 public class TankModel extends Observable implements Iterable<FishModel> {
@@ -22,10 +23,28 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	public InetSocketAddress leftNeighbor;
 	public InetSocketAddress rightNeighbor;
 	public volatile boolean hasToken;
+	public int localState;
+	public Enum recordingMode;
 
 	public TankModel(ClientCommunicator.ClientForwarder forwarder) {
 		this.fishies = Collections.newSetFromMap(new ConcurrentHashMap<FishModel, Boolean>());
 		this.forwarder = forwarder;
+	}
+
+	public void setLeftNeighbor(InetSocketAddress leftNeighbor) {
+		this.leftNeighbor = leftNeighbor;
+	}
+
+	public InetSocketAddress getLeftNeighbor() {
+		return leftNeighbor;
+	}
+
+	public void setRightNeighbor(InetSocketAddress rightNeighbor) {
+		this.rightNeighbor = rightNeighbor;
+	}
+
+	public InetSocketAddress getRightNeighbor() {
+		return rightNeighbor;
 	}
 
 	public boolean hasToken() {
@@ -44,20 +63,12 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 		}, 2000);
 	}
 
-	public void setLeftNeighbor(InetSocketAddress leftNeighbor) {
-		this.leftNeighbor = leftNeighbor;
-	}
-
-	public InetSocketAddress getLeftNeighbor() {
-		return leftNeighbor;
-	}
-
-	public void setRightNeighbor(InetSocketAddress rightNeighbor) {
-		this.rightNeighbor = rightNeighbor;
-	}
-
-	public InetSocketAddress getRightNeighbor() {
-		return rightNeighbor;
+	public void initiateSnapshot() {
+		localState = fishCounter;
+		recordingMode = RecordingMode.IDLE;
+		SnapshotMarker mark = new SnapshotMarker();
+		forwarder.sendMark(getLeftNeighbor(), mark);
+		forwarder.sendMark(getRightNeighbor(), mark);
 	}
 
 	synchronized void onRegistration(String id) {
@@ -78,6 +89,9 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	}
 
 	synchronized void receiveFish(FishModel fish) {
+		if (recordingMode != RecordingMode.IDLE) {
+			localState++;
+		}
 		fish.setToStart();
 		fishies.add(fish);
 	}
@@ -133,6 +147,13 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 
 	public synchronized void finish() {
 		forwarder.deregister(id);
+	}
+
+	enum RecordingMode {
+		IDLE,
+		LEFT,
+		RIGHT,
+		BOTH
 	}
 
 }

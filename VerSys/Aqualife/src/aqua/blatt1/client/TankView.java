@@ -1,9 +1,6 @@
 package aqua.blatt1.client;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
@@ -43,8 +40,10 @@ public class TankView extends JPanel implements Observer {
 	}
 
 	private void drawBorders(Graphics2D g2d) {
+		Stroke stroke = new BasicStroke(10f);
+		g2d.setStroke(stroke);
 		g2d.drawLine(0, 0, 0, TankModel.HEIGHT);
-		g2d.drawLine(TankModel.WIDTH - 1, 0, TankModel.WIDTH - 1, TankModel.HEIGHT);
+		g2d.drawLine(TankModel.WIDTH, 0, TankModel.WIDTH, TankModel.HEIGHT);
 	}
 
 	private void doDrawing(Graphics g) {

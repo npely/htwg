@@ -6,15 +6,15 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-public class NotImplementedYetController implements ActionListener {
+public class SnapshotController implements ActionListener {
 	private final Component parent;
 
-	public NotImplementedYetController(Component parent) {
+	public SnapshotController(Component parent) {
 		this.parent = parent;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(parent, "Functionality not implemented yet.");
+		System.out.println("lol");
 	}
 }
