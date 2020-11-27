@@ -18,11 +18,6 @@ void setSchedAffinity() {
     }
 }
 
-int comp(const void *p, const void *q)
-{
-    return (*(int*) p - *(int*) q);
-}
-
 int main(int argc, char *argv[]) {
     if (argc < 3) {
         fprintf(stderr, "You need to put in the numbr of pages and number of iterations\n");
@@ -54,7 +49,6 @@ int main(int argc, char *argv[]) {
 
         const unsigned long bil = 1000000000;
 
-        unsigned long access_time[iterations];
         unsigned long total_access_time = 0;
 
         // calloc um sich die Initialisierung des Arrays zu sparen
@@ -82,17 +76,11 @@ int main(int argc, char *argv[]) {
                 pages_total_time += (pages_access_time_stop_nano - pages_access_time_start_nano) - (clock_overhead_stop_nano - pages_access_time_start_nano);
             }
 
-            access_time[i] = pages_total_time / num_pages;
+            total_access_time += pages_total_time / num_pages;
         }
         // ------------------------------------------------------------------------------------------------------------------------------------------------------
-        // Array sortieren
-        qsort(access_time, iterations, sizeof(unsigned long), comp);
 
-        for (int i = iterations * 0.1; i < (iterations * 0.7); ++i) {
-            total_access_time += access_time[i];
-        }
-
-        unsigned long final_value = total_access_time / iterations * 0.6;
+        unsigned long final_value = total_access_time / iterations;
 
         printf("Accessing %lu pages takes %lu ns\n", num_pages, final_value);
 
