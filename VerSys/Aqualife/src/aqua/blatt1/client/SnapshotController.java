@@ -7,14 +7,14 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 public class SnapshotController implements ActionListener {
-	private final Component parent;
+	TankModel tankModel;
 
-	public SnapshotController(Component parent) {
-		this.parent = parent;
+	public SnapshotController(TankModel tankModel) {
+		this.tankModel = tankModel;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("lol");
+		this.tankModel.initiateSnapshot();
 	}
 }

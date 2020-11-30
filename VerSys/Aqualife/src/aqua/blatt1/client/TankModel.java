@@ -1,14 +1,19 @@
 package aqua.blatt1.client;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Observable;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import aqua.blatt1.common.Direction;
 import aqua.blatt1.common.FishModel;
-import aqua.blatt1.common.msgtypes.SnapshotMarker;
-import aqua.blatt1.common.msgtypes.Token;
+import aqua.blatt1.common.msgtypes.CollectSnapshot;
 
 public class TankModel extends Observable implements Iterable<FishModel> {
 
@@ -20,55 +25,22 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	protected final Set<FishModel> fishies;
 	protected int fishCounter = 0;
 	protected final ClientCommunicator.ClientForwarder forwarder;
-	public InetSocketAddress leftNeighbor;
-	public InetSocketAddress rightNeighbor;
-	public volatile boolean hasToken;
-	public int localState;
-	public Enum recordingMode;
+	protected InetSocketAddress leftNeighbor;
+	protected InetSocketAddress rightNeighbor;
+	protected volatile boolean hasToken = false;
+	protected Timer timer;
+	private RecordingMode recMode = RecordingMode.IDLE;
+	protected int localState;
+	protected boolean isInitiator = false;
+	protected volatile boolean hasSnapshotCollectToken = false;
+	protected volatile CollectSnapshot snapshotCollector = null;
+	protected volatile boolean isSnapshotDone = false;
+	private int fadingFishCounter = 0;
 
 	public TankModel(ClientCommunicator.ClientForwarder forwarder) {
 		this.fishies = Collections.newSetFromMap(new ConcurrentHashMap<FishModel, Boolean>());
 		this.forwarder = forwarder;
-	}
-
-	public void setLeftNeighbor(InetSocketAddress leftNeighbor) {
-		this.leftNeighbor = leftNeighbor;
-	}
-
-	public InetSocketAddress getLeftNeighbor() {
-		return leftNeighbor;
-	}
-
-	public void setRightNeighbor(InetSocketAddress rightNeighbor) {
-		this.rightNeighbor = rightNeighbor;
-	}
-
-	public InetSocketAddress getRightNeighbor() {
-		return rightNeighbor;
-	}
-
-	public boolean hasToken() {
-		return hasToken;
-	}
-
-	public void receiveToken(Token token) {
-		hasToken = true;
-		Timer tokenTimer = new Timer();
-		tokenTimer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				hasToken = false;
-				forwarder.sendToken(getLeftNeighbor(), token);
-			}
-		}, 2000);
-	}
-
-	public void initiateSnapshot() {
-		localState = fishCounter;
-		recordingMode = RecordingMode.IDLE;
-		SnapshotMarker mark = new SnapshotMarker();
-		forwarder.sendMark(getLeftNeighbor(), mark);
-		forwarder.sendMark(getRightNeighbor(), mark);
+		this.timer = new Timer();
 	}
 
 	synchronized void onRegistration(String id) {
@@ -89,11 +61,12 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	}
 
 	synchronized void receiveFish(FishModel fish) {
-		if (recordingMode != RecordingMode.IDLE) {
-			localState++;
-		}
 		fish.setToStart();
 		fishies.add(fish);
+
+		if(this.recMode != RecordingMode.IDLE) {
+			this.localState++;
+		}
 	}
 
 	public String getId() {
@@ -108,23 +81,82 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 		return fishies.iterator();
 	}
 
+	public synchronized void receiveToken() {
+		this.hasToken = true;
+		this.timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				TankModel.this.hasToken = false;
+				forwarder.forwardToken(TankModel.this.leftNeighbor);
+			}
+		}, 2000);
+	}
+
+	public synchronized boolean hasToken() {
+		return this.hasToken;
+	}
+
+	protected void initiateSnapshot() {
+		this.isInitiator = true;
+		this.localState = this.fishies.size() - fadingFishCounter;
+		this.recMode = RecordingMode.BOTH;
+		this.hasSnapshotCollectToken = true;
+		this.snapshotCollector = new CollectSnapshot();
+		this.forwarder.sendSnapshotMarker(this.leftNeighbor);
+		this.forwarder.sendSnapshotMarker(this.rightNeighbor);
+	}
+
+	protected synchronized void handleReceivedMarker(String dir) {
+		RecordingMode direction;
+		if (dir.equals("left"))
+			direction = RecordingMode.RIGHT;
+		else
+			direction = RecordingMode.LEFT;
+
+		if (this.recMode == RecordingMode.IDLE) {
+			this.localState = this.fishies.size() - fadingFishCounter;
+			this.recMode = direction;
+			this.forwarder.sendSnapshotMarker(this.leftNeighbor);
+			this.forwarder.sendSnapshotMarker(this.rightNeighbor);
+		} else {
+			if (this.recMode == RecordingMode.BOTH) {
+				this.recMode = direction;
+			} else {
+				this.recMode = RecordingMode.IDLE;
+				if (hasSnapshotCollectToken) {
+					this.hasSnapshotCollectToken = false;
+					this.snapshotCollector.addFishies(this.localState);
+					forwarder.sendSnapshotCollectionMarker(this.leftNeighbor, this.snapshotCollector);
+					this.snapshotCollector = null;
+				}
+			}
+		}
+	}
+
 	private synchronized void updateFishies() {
 		for (Iterator<FishModel> it = iterator(); it.hasNext();) {
 			FishModel fish = it.next();
 
 			fish.update();
 
-			if (fish.hitsEdge())
-				if (hasToken) {
+			if (fish.hitsEdge()) {
+				if (this.hasToken) {
 					forwarder.handOff(fish, this);
-				} else {
+					fadingFishCounter++;
+				}
+				else {
 					fish.reverse();
 				}
+			}
 
-			if (fish.disappears())
+			if (fish.disappears()) {
 				it.remove();
+				fadingFishCounter--;
+			}
 		}
 	}
+
+
 
 	private synchronized void update() {
 		updateFishies();
