@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     double time_since_last_print = 2.0; 
     double t = Time_GetSeconds();
     int loop_count = 0;
-    while (loop_count < 20) {
+    while (loop_count < 10) {
 	x[i++] += 1; // main work of loop done here.
 
 	// if we've gone through the whole loop, reset a bunch of stuff
@@ -56,14 +56,15 @@ int main(int argc, char *argv[]) {
         		printf("loop %d in %.2f ms (bandwidth: %.2f MB/s)\n", 
 		       loop_count, 1000 * delta_time, 
 		       size_in_bytes / (1024.0*1024.0*delta_time));
+               averageBandwidth += size_in_bytes / (1024.0*1024.0*delta_time);
 		time_since_last_print = 0;
 	    }
-    
 	    i = 0;
 	    t = Time_GetSeconds();
 	    loop_count++;
 	    }
     }
+    printf("average Bandwidth: %.2f\n", averageBandwidth / loop_count);
     return 0;
 }
 

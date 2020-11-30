@@ -3,6 +3,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-x = np.arrange(1, 12)
+x = np.arange(3, 12)
 
-y = [2104.70, 2104.38, 2106.06, 2104.53, 2106.92, 2109.56]
+y = [1921.40, 1830.14, 1922.48, 1922.37, 1925.42, 1850.89, 144.83, 61.98, 31.02]
+
+plt.plot(x, y)
+plt.xlabel('Memory in GB')
+plt.ylabel('Average Bandwidth in MB/s')
+plt.show()

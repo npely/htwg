@@ -68,7 +68,23 @@ Free wird wieder auf den erwarteten Wert zurückgesetzt (erst nach Schließen de
 3)
 
 cat /proc/meminfo
-MemTotal:        7908820 kB
+MemTotal:        7908824 kB
+MemFree:         4229420 kB
+MemAvailable:    5438056 kB
+Buffers:           52704 kB
+Cached:          1129112 kB
+SwapCached:       120864 kB
+Active:          2073244 kB
+Inactive:        1095332 kB
+Active(anon):    1554260 kB
+Inactive(anon):   250136 kB
+Active(file):     518984 kB
+Inactive(file):   845196 kB
+Unevictable:      112676 kB
+Mlocked:              48 kB
+SwapTotal:      15728628 kB // nach Erzeugen neuer, eigener Swapfile
+SwapFree:       14872308 kB
+
 
 ./mem 4000
 procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
