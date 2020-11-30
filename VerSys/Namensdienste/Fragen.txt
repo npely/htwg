@@ -1,0 +1,42 @@
+1. Wie stehen die Begriffe, Entität, Zugriffspunkt, Adresse, Namen und Bezeichner in Beziehung zueinander?
+
+Entität = so ziemlich alles (Ressourcen wie Hosts, Drucker, Festplatten und Dateien. Oder Prozesse, Benutzer, Internetseiten, etc..)
+
+Zugriffspunkt = Ermöglicht Zugriff auf Entität (Name eines Zugriffspunktes = Adresse)
+
+Entität -> mehrere Zugriffspunkte
+
+- Jeder Bezeichner verweist auf höchstens eine Entität
+- Auf jede Entität verweist hochstens ein Bezeichner
+- Ein Bezeichner verweist immer auf die gleiche Entität
+
+Name = eine Art der Kennzeichnung einer Entität (Adresse, Bezeichner, benutzerfreundliche Namen, ortsunabhängige Namen)
+
+
+2. Welche einfachen Lösungen gibt es zum Auffinden von Entitäten bei linearer Benennung?
+
+Broadcasts (Eine Nachricht mit dem Bezeichner der Entität als Inhalt wird an jeden Rechner gesendet) und Multicasts (nur eine begrenzte Gruppe von Hosts erhält die Nachricht)
+
+Zeiger zur Weiterleitung (Wenn sich eine Entität von A nach B bewegt, hitnerlässt sie in A einen Hinweis auf ihren neuen Ort, ermöglicht "Nachverfolgung der Kette")
+
+
+3. Wie funktionieren heimatgestütze Ansätze?
+
+Eine Entität besitzt einen Heimatstandort (Ort an dem die Entität entstand), der den aktuellen Standort einer Entität nachverfolgt. Wenn der Heimatagent ein Paket
+für den mobilen Host empfängt, schlägt er den akutellen Standort des ÄHosts nach. Lieft der Host innerhalb des derzeitigen lokalen Netzwerkes, wird das Paket
+einfach weitergeleitet. Gleichzeitig wird dem Sender des Paketes der aktuelle Standort des Hosts mitgeteilt.
+
+
+4. Was ist ein Namensraum?
+
+Ein Namensraum strukturiert Namen über eine Art Baum Hierarchie. Er bewahrt im Allgemeinen Informationen zu der Entität auf, die er repräsentiert - beispielsweise
+ihre Adresse -, damit ein Client auf sie zugreifen kann.
+
+
+5. Wie funktioniert die hierarchische Namensauflösung?
+
+Es existieren unterschiedliche Implementationen. Im Allgemeinen wird der Namensraum von der Wurzel abwärts weiter aufgelöst. Die Wurzel checkt ob sie den Bezeichner kennt,
+wenn ja extrahiert sie den Rest und gibt diesen an ihre Kinder weiter, bis der gesamte Name aufgelöst wurde.
+
+
+
