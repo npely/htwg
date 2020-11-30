@@ -1,3 +1,5 @@
+// Niklas Pelz, Roland Burke --------- Gruppe 9
+
 #define _GNU_SOURCE
 #include <sched.h>
 #include <stdlib.h>
