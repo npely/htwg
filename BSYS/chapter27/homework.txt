@@ -1,0 +1,35 @@
+1)
+
+Es pointed auf die jeweiligen Zeilen in denen der ungeschützte Zugriff stattfindet und mit welchem vorherigen Zugriff es in Konflikt gerät.
+Außerdem gibt es an ob der jeweilige Thread ein Lock besitzte, oder nicht.
+
+2)
+
+Da nurnoch ein Zugriff stattfindet wenn einer entfernt wird kann es zu keiner Race Condition kommen.
+Es reicht auch nicht einen Zugriff zu locken, da der andere Zugriff trotzdem noch ungeschützt abläuft und dazwischen funken kann.
+
+3)
+
+Die zwei Threads blockieren sich gegenseitig
+
+4)
+
+Thread #3: lock order "0x10C040 before 0x10C080" violated
+
+5)
+
+An sich hat das Programm dasselbe Problem.
+Jedoch sollte
+
+
+
+6)
+
+Die konstante Spin Instruction verschwendet nur CPU Cycles. Außerdem ist es gefährlich einfache Flags zu verwenden, da diese sehr fehleranfällig sind.
+In diesem Fall meldet Helgrind auch eine mögliche Race Condition:
+==5412== ERROR SUMMARY: 23 errors from 2 contexts (suppressed: 40 from 36)
+23 Fehler!!
+
+7)
+
+Mithilfe einer gescheiten Condition Variable passiert das nicht. Helgrind meldet keine Fehler und es werden keine CPU Cycles verschwendet.
