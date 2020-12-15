@@ -1,0 +1,52 @@
+2)
+
+0
+
+3)
+
+Er looped jeweils zweimal durch den Code, flag bleibt 0.
+
+4)
+
+Alles unter 11 macht Probleme, da der gesamte Code 11 Zeilen lang ist.
+
+gute Werte = 11, 15, 16, 21, 22, 23, 27, 28, 30, 31, 32, 33, 34, 37, 38, 40, 41, 42, 43, 44, 45, 46....
+
+5)
+
+Hier werden jetzt jeweils die Werte von %ax und mutex direkt getauscht.
+
+6)
+
+test-and-set funktioniert mit jeder Anzahl an Interrupts. Es kann CPU wasten, da ein Thread oftmals warten muss.
+%bx von Thread 1 ist meistens schon fast bei 0, während %bx von Thread 2 noch bei circa 8 steht. 
+
+7)
+
+python ./x86.py -p test-and-set.s -M mutex,count -R ax,bx -c -a bx=10,bx=10 -P 0011 -c
+Sollte jedoch dasselbe wie ein -i 2 sein wenn ich mich nicht täusche...
+
+9)
+
+Der erste Thread ist jedes Mal sehr viel früher fertig als der andere Thread
+
+10)
+
+
+
+11)
+
+Ja, ist eigentlich derselbe Code wie im Kapitel. 
+Der Count stimmt am Ende, jedoch verbringen die Threads extrem viel Zeit im Spin Abschnitt.
+
+12)
+
+Dei einzelnen Threads belegen oft alleine Abschnitte in denen sie spinnen wenn der Interrupt zu hoch ist.
+
+13)
+
+Sobald Interrupts die 5 überschreiten lohnt sich das yield, da es im schlimmsten Fall direkt die CPU wieder abegeben würde.
+
+14)
+
+Man spart sich ein Write, indem mutex nur zu 1 geändert wird wenn das Lock free ist.

@@ -8,6 +8,7 @@ previous sentence. The program is called: `paging-multilevel-translate.py`
 Some basic assumptions:
 
 * The page size is an unrealistically-small 32 bytes
+
 * The virtual address space for the process in question (assume there is only one) is 1024 pages, or 32 KB
 * physical memory consists of 128 pages
 
