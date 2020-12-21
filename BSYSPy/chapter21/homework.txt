@@ -203,4 +203,11 @@ Die CPU Belastung nimmt am Anfang der ersten Loop stark zu, lässt dann aber wie
 Incoming blocks stimmt fast immer mit swap ins überein.
 Genauso wie outgoing blocks und swap outs.
 
+letze Aufgabe)
+
+sudo dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
 

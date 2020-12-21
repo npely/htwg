@@ -1,0 +1,44 @@
+1)
+
+dx wird -1 sein, da wir Anfangs nichts in das Register geschrieben haben und dort 0 drin steht.
+Nun wird der Wert verringert und mit Null verglichen, da der Wert nicht größer/gleich 0 ist springt er nicht zurück an den Anfang und halted den Thread.
+
+2)
+
+Ne, alles gut, da der Interrupt bei 100 liegt. Das heißt der erste Thread läuft durch und danach der zweite.
+
+3)
+
+An sich sorgt der Interrupt nur dafür das die Threads länger laufen, es existiert ja immernoch keine Race Condition, da beide auf ihre eigenen Values zugreifen
+
+4)
+
+Er erhöht sich nach dem Move nach Address 2000 auf 1
+
+5)
+
+Da bx 3 ist, muss jeder Thread solange laufen bis bx auf 0 reduziert wurde.
+Der finale Wert ist 6, da er in jedem Thread jeweils 3 mal inkrementiert wurde.
+
+6)
+
+Die critical Section ist der Moment in dem der Wert aus %ax wieder zurück in die Adresse 2000 geschrieben wird. Sobald der andere Thread auf den alten "falschen Wert" zugreift
+und dort aufaddiert wird geht eine Addition "verloren". Das heißt der Interrupt sollte auf jeden Fall nach dem zweiten Move auftreten. Davor kommt es zu Problemen.
+
+7)
+
+1 = schlecht, da alles parallelt ausgeführt wird, und somit die Hälfte alles Additionen verloren geht
+2 = genauso schlecht
+3 = ok, da der richtige Wert zurückgeschrieben wird bevor er wieder ausgelesen wird.
+Nach 3 ist es eh egal, da nur einmal gelooped wird und sobald die ciritical Section überschritten wurde läuft alles wie geplant.
+
+8)
+
+Die Anzahl der Interrupts muss % 3 = 0 ergeben. Da sichergestellt werden muss das der mov - add - mov Block immer zusammenhängend ausgeführt wird
+
+9)
+
+Die Threads interagieren miteinander indem sie sich die Kondition zum Beenden übergeben. Wenn beide Threads mit ax=0 starten würde würden sie sich nie beenden, da keiner dem Anderen
+die Kondition zu Beenden übergeben kann.
+Wenn der zweite Thread ax=1 hat muss der erste Thread solange warten bis der Interrupt eintritt und der zweite Thread die Variable setzen kann.
+
