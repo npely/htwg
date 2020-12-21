@@ -39,7 +39,7 @@ void update(counter_t *c, int threadID) {
 	        pthread_mutex_unlock(&c->glock);
 	        c->local[threadID] = 0;
         }
-        pthread_mutex_unlock(&c->llock[threadID]);
+    pthread_mutex_unlock(&c->llock[threadID]);
 }
 
 int get(counter_t *c) {
@@ -51,23 +51,28 @@ int get(counter_t *c) {
 
 void *threads(void *arg) {
 	args_t *args = (args_t *) arg;
-        for(int i = 0; i < loops; ++i) {
-                update(args->counter, args->id);
-        }
-        return NULL;
+	for(int i = 0; i < loops; ++i) {
+		update(args->counter, args->id);
+	}
+    return NULL;
 }
 
 int main (int argc, char *argv[]) {
 	if (argc != 3) {
-			return -1;
+		return -1;
 	}
+
 	loops = atoi(argv[1]);
 	numTs = atoi(argv[2]);
+
 	pthread_t thread[numTs];
 	struct timespec start, end;
 	counter_t counter;
+
 	init(&counter, 100);
+
 	args_t tArgs[numTs];
+
 	for(int i = 0; i < numTs; ++i) {
 		tArgs[i].counter = &counter;
 		tArgs[i].id = i;
@@ -81,6 +86,7 @@ int main (int argc, char *argv[]) {
 			assert(pthread_join(thread[i], NULL) == 0);
 	}
 	clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+
 	unsigned long time = (end.tv_sec - start.tv_sec) * 1000000000 + end.tv_nsec - start.tv_nsec;
 	printf("counter = %d\ntook: %lu ns\n", get(&counter), time);
 	return 0;
