@@ -1,64 +1,48 @@
-#define _GNU_SOURCE
-#include <stdlib.h>
-#include <stdio.h>
 #include <pthread.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
 
-typedef struct __counter_t {
-	int value;
-	pthread_mutex_t glock;
-} counter_t;
+int counter = 0;
+int loops = 0;
 
-typedef struct __counter_arg {
-	int tid;
-	counter_t *c;
-} counter_arg;
-
-void init(counter_t *c, int init) {
-	c->value = init;
-	pthread_mutex_init(&c->glock, NULL);
-}
-
-void increment(counter_t *c, int i) {
-	pthread_mutex_lock(&c->glock);
-	c->value = c->value + 1;
-	pthread_mutex_unlock(&c->glock);
-}
-
-void *run(void *arg) {
-	counter_arg *args = (counter_arg *) arg;
-	while (1) {
-		//printf("%d updating to %d\n", args->tid, args->c->value + 1);
-		increment(args->c, 1);
-		pthread_yield();
+void *incr(void *l) {
+	for(int i = 0; i < loops; ++i) {
+		assert(pthread_mutex_lock(l) == 0);
+		counter++;
+		assert(pthread_mutex_unlock(l) == 0);
 	}
+	return NULL;
 }
 
-void get(counter_t *c, int *value) {
-	pthread_mutex_lock(&c->glock);
-	*value = c->value;
-	pthread_mutex_unlock(&c->glock);
-}
 
-int main(void) {
-	pthread_t p1, p2, p3, p4;
-	counter_t *c = (counter_t *) malloc(sizeof(counter_t));
-	init(c, 0);
-	int value;
-
-	counter_arg a1 = {0, c};
-	counter_arg a2 = {1, c};
-	counter_arg a3 = {2, c};
-	counter_arg a4 = {3, c};
-
-	pthread_create(&p1, NULL, run, &a1);
-	pthread_create(&p2, NULL, run, &a2);
-	pthread_create(&p3, NULL, run, &a3);
-	pthread_create(&p4, NULL, run, &a4);
-
-	while(1) {
-		get(c, &value);
-		printf("reading %d\r", value);
-		pthread_yield();
+int main(int argc, char *argv[]) {
+	if (argc != 3) {
+		return -1;
 	}
+	loops = atoi(argv[1]);
+	int threads = atoi(argv[2]);
+
+	pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+	pthread_t thread[threads];
+	struct timespec start, end;
+
+	clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+	for(int i = 0; i < threads; ++i) {
+		assert(pthread_create(&thread[i], NULL, incr, &lock) == 0);
+	}
+	for (int i = 0; i < loops; ++i) {
+                assert(pthread_mutex_lock(&lock) == 0);
+                counter++;
+                assert(pthread_mutex_unlock(&lock) == 0);
+
+	}
+	for(int i = 0; i < threads; ++i) {
+                assert(pthread_join(thread[i], NULL) == 0);
+        }
+	clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+	unsigned long time = (end.tv_sec - start.tv_sec) * 1000000000 + end.tv_nsec - start.tv_nsec;
+	printf("counter = %d\ntook: %lu ns\n", counter, time);
 	return 0;
 }

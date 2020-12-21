@@ -1,101 +1,87 @@
 #include <pthread.h>
-#include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
-#define NUMCPUS 4
+#include <stdlib.h>
+#include <assert.h>
+
+int numTs = 0;
+int loops = 0;
 
 typedef struct __counter_t {
 	int global;
 	pthread_mutex_t glock;
-	int local[NUMCPUS];
-	pthread_mutex_t llock[NUMCPUS];
+	int local[100];
+	pthread_mutex_t llock[100];
 	int threshold;
 } counter_t;
 
-typedef struct __args_u {
-	counter_t *c;
-	int threadID;
-	int amt;
-} args_u;
+typedef struct __args_t {
+	counter_t *counter;
+	int id;
+} args_t;
 
 void init(counter_t *c, int threshold) {
-	c -> threshold = threshold;
-	c -> global = 0;
-	printf("init\n", c -> global);
-
-	pthread_mutex_init(&c -> glock, NULL);
-	for (int i = 0; i < NUMCPUS; i++) {
-		c -> local[i] = 0;
-		pthread_mutex_init(&c -> llock[i], NULL);
+	c->threshold = threshold;
+	c->global = 0;
+	pthread_mutex_init(&c->glock, NULL);
+	for (int i = 0; i < numTs; i++) {
+		c->local[i] = 0;
+		pthread_mutex_init(&c->llock[i], NULL);
 	}
 }
 
-void update(void *arg) {
-	args_u *args = (args_u *) arg;
-	int threadID = (int) args -> threadID;
-	counter_t *c = (counter_t *) args -> c;
-	int amt = (int) args -> amt;
-
-	int cpu = threadID % NUMCPUS;
-	pthread_mutex_lock(&c -> llock[cpu]);
-	c -> local[cpu] += amt;
-	if (c -> local[cpu] >= c -> threshold) {
-		pthread_mutex_lock(&c -> glock);
-		c -> global += c -> local[cpu];
-		pthread_mutex_unlock(&c -> glock);
-		c -> local[cpu] = 0;
-	}
-   	pthread_mutex_unlock(&c->llock[cpu]);
-}
-
-void *repeat(void *arg) {
-    while(1) {    
-        update(arg);
-    }
+void update(counter_t *c, int threadID) {
+	pthread_mutex_lock(&c->llock[threadID]);
+	c->local[threadID]++;
+	if (c->local[threadID] >= c->threshold) {
+	        pthread_mutex_lock(&c->glock);
+	        c->global += c->local[threadID];
+	        pthread_mutex_unlock(&c->glock);
+	        c->local[threadID] = 0;
+        }
+        pthread_mutex_unlock(&c->llock[threadID]);
 }
 
 int get(counter_t *c) {
-	pthread_mutex_lock(&c -> glock);
-	int val = c -> global;
-	pthread_mutex_unlock(&c -> glock);
+	pthread_mutex_lock(&c->glock);
+	int val = c->global;
+	pthread_mutex_unlock(&c->glock);
 	return val;
 }
 
-int main(void) {
-	pthread_t p1, p2, p3, p4;
-	counter_t *c1 = (counter_t *) malloc(sizeof(counter_t));
-    	counter_t *c2 = (counter_t *) malloc(sizeof(counter_t));
-    	counter_t *c3 = (counter_t *) malloc(sizeof(counter_t));
-    	counter_t *c4 = (counter_t *) malloc(sizeof(counter_t));
-
-	init(c1, 5);
-    	init(c2, 5);
-    	init(c3, 5);
-    	init(c4, 5);
-
-	args_u u1 = { c1, 0, 1 };
-	args_u u2 = { c2, 1, 1 };
-	args_u u3 = { c3, 2, 1 };
-	args_u u4 = { c4, 3, 1 };
-
-	pthread_create(&p1, NULL, repeat, &u1);
-	pthread_create(&p2, NULL, repeat, &u2);
-	pthread_create(&p3, NULL, repeat, &u3);
-	pthread_create(&p4, NULL, repeat, &u4);
-
-	for (int i = 0;; i++) {
-		int thread = i % NUMCPUS;
-		int global_timer = 0;
-		if (thread == 0)
-			global_timer = get(c1);
-		else if (thread == 1)
-			global_timer = get(c2);
-		else if (thread == 2)
-			global_timer = get(c3);
-		else if (thread == 3)
-			global_timer = get(c4);
-        if (i % 50 == 0) {
-	    	printf("%d -> global clock %d\n", i, global_timer);
+void *threads(void *arg) {
+	args_t *args = (args_t *) arg;
+        for(int i = 0; i < loops; ++i) {
+                update(args->counter, args->id);
         }
+        return NULL;
+}
+
+int main (int argc, char *argv[]) {
+	if (argc != 3) {
+			return -1;
 	}
+	loops = atoi(argv[1]);
+	numTs = atoi(argv[2]);
+	pthread_t thread[numTs];
+	struct timespec start, end;
+	counter_t counter;
+	init(&counter, 100);
+	args_t tArgs[numTs];
+	for(int i = 0; i < numTs; ++i) {
+		tArgs[i].counter = &counter;
+		tArgs[i].id = i;
+	}
+
+	clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+	for(int i = 0; i < numTs; ++i) {
+			assert(pthread_create(&thread[i], NULL, threads, &tArgs[i]) == 0);
+	}
+	for(int i = 0; i < numTs; ++i) {
+			assert(pthread_join(thread[i], NULL) == 0);
+	}
+	clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+	unsigned long time = (end.tv_sec - start.tv_sec) * 1000000000 + end.tv_nsec - start.tv_nsec;
+	printf("counter = %d\ntook: %lu ns\n", get(&counter), time);
 	return 0;
 }
