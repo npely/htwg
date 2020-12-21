@@ -1,0 +1,50 @@
+2)
+
+./main-two-cvs-while -p 1 -c 1 -m 1 -v
+./main-two-cvs-while -p 1 -c 1 -m 10 -v
+./main-two-cvs-while -p 1 -c 1 -m 1 -l 100 -v
+./main-two-cvs-while -p 1 -c 1 -m 1 -C 0,0,0,0,0,0,1 -v
+./main-two-cvs-while -p 1 -c 1 -m 10 -l 10 -C 0,0,0,0,0,0,1 -v
+
+3)
+
+kein Plan, Container = Ubuntu, mein System = Linux Mint
+
+4)
+./main-two-cvs-while -p 1 -c 3 -m 1 -C 0,0,0,1,0,0,0:0,0,0,1,0,0,0:0,0,0,1,0,0,0 -l 10 -v -t
+
+12 Sekunden.
+
+5)
+
+Es sollte keinen Unterschied machen
+
+6)
+
+./main-two-cvs-while -p 1 -c 3 -m 1 -C 0,0,0,0,0,0,1:0,0,0,0,0,0,1:0,0,0,0,0,0,1 -l 10 -v -t
+
+Es ruft 12 Mal sleep auf, braucht aber nur 5 Sekunden, da die anderen Threads weiter machen können, da das Lock released wird.
+
+7)
+
+Immernoch 5 Sekunden
+
+8)
+
+Nein
+
+9)
+
+./main-one-cv-while -p 1 -c 2 -m 1 -v
+
+Dasselbe wie in Figure 30.9
+
+10)
+
+Einer sollte passen, zwei könnten wie Figure 30.7 enden. Deswegen sollte man immer while verwenden.
+
+11)
+
+./main-two-cvs-while-extra-unlock -p 1 -c 2 -m 10 -l 10 -v -C 0,0,0,0,1,0,0:0,0,0,0,0,0,0
+
+Der erste Consumer konsumiert nur einen Wert.
