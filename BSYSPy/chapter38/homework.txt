@@ -1,0 +1,8 @@
+1)
+
+Left-symmetric bedeutet das der "höchste" Block immer links von der Parity Unit steht
+Left-asymmetric bedeutet das es einfach von links nach rechts wächst.
+
+2)
+
+./raid.py -L 5 -5 LS -c -W -seq -C 8k -n 12
