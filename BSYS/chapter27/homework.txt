@@ -21,8 +21,6 @@ Thread #3: lock order "0x10C040 before 0x10C080" violated
 An sich hat das Programm dasselbe Problem.
 Jedoch sollte
 
-
-
 6)
 
 Die konstante Spin Instruction verschwendet nur CPU Cycles. Außerdem ist es gefährlich einfache Flags zu verwenden, da diese sehr fehleranfällig sind.
