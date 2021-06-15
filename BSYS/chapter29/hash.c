@@ -7,61 +7,71 @@
 
 int max = 10;
 
-typedef struct __hash_t {
+typedef struct __hash_t
+{
 	list_t lists[BUCKETS];
 } hash_t;
 
-typedef struct __hash_arg {
+typedef struct __hash_arg
+{
 	int tid;
 	hash_t *H;
 } hash_arg;
 
-void Hash_Init(hash_t *H) {
+void Hash_Init(hash_t *H)
+{
 	int i;
-	for (i = 0; i < BUCKETS; i++) {
+	for (i = 0; i < BUCKETS; i++)
+	{
 		List_Init(&H->lists[i]);
 	}
 }
 
-void Hash_Insert(hash_t *H, int key) {
+void Hash_Insert(hash_t *H, int key)
+{
 	int bucket = key % BUCKETS;
 	List_Insert(&H->lists[bucket], key);
 }
 
-int Hash_Lookup(hash_t *H, int key) {
+int Hash_Lookup(hash_t *H, int key)
+{
 	int bucket = key % BUCKETS;
 	return List_Lookup(&H->lists[bucket], key);
 }
 
-void *Hash_Repeat(void *arg) {
-	hash_arg *args = (hash_arg *) arg;
-	for (int i = 0; i < max; i++) {
+void *Hash_Repeat(void *arg)
+{
+	hash_arg *args = (hash_arg *)arg;
+	for (int i = 0; i < max; i++)
+	{
 		Hash_Insert(args->H, i);
 		//printf("%d put %d\n", args->tid, i);
 		pthread_yield();
 	}
 }
 
-unsigned long getPrecision(void){
+unsigned long getPrecision(void)
+{
 
-
-	struct timespec start,end;
+	struct timespec start, end;
 
 	unsigned long precision = 0;
 	unsigned int precisionFaktor = 10000000;
 
-	for (unsigned int i = 0; i < precisionFaktor; i++){
-	  	clock_gettime(CLOCK_REALTIME, &start);
-	  	clock_gettime(CLOCK_REALTIME, &end);
-	  	precision += (end.tv_sec - start.tv_sec) * 1000000000 + (end.tv_nsec - start.tv_nsec);
+	for (unsigned int i = 0; i < precisionFaktor; i++)
+	{
+		clock_gettime(CLOCK_REALTIME, &start);
+		clock_gettime(CLOCK_REALTIME, &end);
+		precision += (end.tv_sec - start.tv_sec) * 1000000000 + (end.tv_nsec - start.tv_nsec);
 	}
 	precision /= precisionFaktor;
 	//printf("precision: %ld\n", precision);
 
-	return precision; 
+	return precision;
 }
 
-int main(void) {
+int main(void)
+{
 	pthread_t p1, p2, p3, p4;
 
 	hash_t *h = malloc(sizeof(hash_t));
@@ -96,14 +106,17 @@ int main(void) {
 
 	clock_gettime(CLOCK_REALTIME, &end);
 
-	for (int i = 0; i < max; i++) {
-                if (Hash_Lookup(h, i) == 0) {
-                        printf("found %d\n", i);
-                } else {
-                        printf("not found %d\n", i);
-                }
+	for (int i = 0; i < max; i++)
+	{
+		if (Hash_Lookup(h, i) == 0)
+		{
+			printf("found %d\n", i);
+		}
+		else
+		{
+			printf("not found %d\n", i);
+		}
 	}
-
 
 	long long unsigned time = (end.tv_sec - start.tv_sec) * 1000000000 + (end.tv_nsec - start.tv_nsec) - getPrecision();
 
