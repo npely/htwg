@@ -1,0 +1,46 @@
+
+// Proper Code
+
+char *src = "test";
+char *dst = (char *) malloc(strlen(src) + 1);
+strcpy(dst, src);
+printf("%s\n", dst);
+free(dst);
+
+// Not Allocating Enough Memory
+
+char *src = "test";
+char *dst = (char *) malloc(strlen(src));
+strcpy(dst, src);
+printf("%s\n", dst);
+free(dst);
+
+// Forgetting To Initialize
+
+char *src = "test";
+char *dst = (char *) malloc(strlen(src) + 1);
+printf("%s\n", dst);
+free(dst);
+
+// Forgetting To Free Memory
+
+char *src = "test";
+char *dst = (char *) malloc(strlen(src) + 1);
+strcpy(dst, src);
+printf("%s\n", dst);
+
+// Freeing Before Done With It
+
+char *src = "test";
+char *dst = (char *) malloc(strlen(src) + 1);
+strcpy(dst, src);
+free(dst);
+printf("%s\n", dst);
+
+// Calling Free Incorrectly
+
+char *src = "test";
+char *dst = (char *) malloc(strlen(src) + 1);
+strcpy(dst, src);
+printf("%s\n", dst);
+free(&dst + 2);
