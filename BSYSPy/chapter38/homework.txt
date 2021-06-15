@@ -1,0 +1,42 @@
+1)
+
+Left-symmetric bedeutet das der "höchste" Block immer links von der Parity Unit steht
+Left-asymmetric bedeutet das es einfach von links nach rechts wächst.
+
+2)
+
+./raid.py -L 5 -5 LS -c -W -seq -C 8k -n 12
+
+5)
+
+./raid.py -L 0 -t -n 100 -c    // 275.7
+./raid.py -L 1 -t -n 100 -c    // 278.7
+./raid.py -L 4 -t -n 100 -c    // 386.1
+./raid.py -L 5 -t -n 100 -c    // 276.5
+
+6)
+
+./raid.py -L 0 -t -n 100 -c -D 8   // 275.7 / 156.5 = 1.76
+./raid.py -L 1 -t -n 100 -c -D 8   // 278.7 / 167.8 = 1.66
+./raid.py -L 4 -t -n 100 -c -D 8   // 386.1 / 165.0 = 2.34
+./raid.py -L 5 -t -n 100 -c -D 8   // 276.5 / 158.6 = 1.74
+
+7)
+
+./raid.py -L 0 -t -n 100 -c -w 100       // 275.7    100 * 10 / 4
+./raid.py -L 1 -t -n 100 -c -w 100       // 509.8    100 * 10 / (4 / 2)
+./raid.py -L 4 -t -n 100 -c -w 100       // 982.5
+./raid.py -L 5 -t -n 100 -c -w 100       // 497.4
+./raid.py -L 0 -t -n 100 -c -D 8 -w 100  // 275.7 / 156.5 = 1.76    100 * 10 / 8
+./raid.py -L 1 -t -n 100 -c -D 8 -w 100  // 509.8 / 275.7 = 1.85    100 * 10 / (8 / 2)
+./raid.py -L 4 -t -n 100 -c -D 8 -w 100  // 982.5 / 937.8 = 1.05
+./raid.py -L 5 -t -n 100 -c -D 8 -w 100  // 497.4 / 290.9 = 1.71
+
+8)
+
+./raid.py -L 0 -t -n 100 -c -w 100 -W seq    // 275.7 / 12.5 = 22
+./raid.py -L 1 -t -n 100 -c -w 100 -W seq    // 509.8 / 15 = 34
+./raid.py -L 4 -t -n 100 -c -w 100 -W seq    // 982.5 / 13.4 = 73
+./raid.py -L 5 -t -n 100 -c -w 100 -W seq    // 497.4 / 13.4 = 37
+
+READS und WRITES performen genau gleich bei sequentiellen Workloads.
