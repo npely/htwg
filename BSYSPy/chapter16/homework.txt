@@ -29,7 +29,7 @@ ARG phys mem size 512
 
 Segment register information:
 
-  Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+  Segment 0 base  (grows positive) : 0x00000000 (decimal 0) 
   Segment 0 limit                  : 20
 
   Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
