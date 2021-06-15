@@ -42,7 +42,7 @@ prompt> ./malloc.py -S 100 -b 1000 -H 4 -a 4 -l ADDRSORT -p BEST -n 5
 ptr[0] = Alloc(3)  returned ?
 List?
 
-Free(ptr[0]) returned ?
+Fr(ptr[0]) returned ?
 List?
 
 ptr[1] = Alloc(5)  returned ?
@@ -70,7 +70,7 @@ Here we look at the results by using the -c option.
 ```sh
 prompt> ./malloc.py -S 100 -b 1000 -H 4 -a 4 -l ADDRSORT -p BEST -n 5 -c
 
-ptr[0] = Alloc(3)  returned 1004 (searched 1 elements)
+ptr[0] = Alloc(3) returned 1004 (searched 1 elements)
 Free List [ Size 1 ]:  [ addr:1008 sz:92 ]
 
 Free(ptr[0]) returned 0
